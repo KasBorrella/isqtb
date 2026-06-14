@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estudio ISTQB</title>
+<script>/* Aplica el tema guardado antes de pintar para evitar parpadeo. */(function(){try{var t=localStorage.getItem('istqb:tema');if(t==='dark'||(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <a class="volver-home" href="index.html">← Elegir otra certificación</a>
+  <div class="eyebrow" id="eyebrow">ISTQB</div>
+  <h1 id="titulo"></h1>
+  <p class="sub" id="sub"></p>
+  <div class="pipeline" id="pipeline" aria-label="Progreso por capítulos"></div>
+  <div class="estado-runner" id="runner"></div>
+</header>
+
+<nav id="nav">
+  <button data-sec="plan" class="act">Plan de estudio</button>
+  <button data-sec="temario">Temario y quizzes</button>
+  <button data-sec="ejercicios" id="nav-ejercicios">Ejercicios</button>
+  <button data-sec="caso" id="nav-caso">Caso de estudio</button>
+  <button data-sec="simulacro">Examen final</button>
+  <button data-sec="glosario" id="nav-glosario">Glosario</button>
+  <button data-sec="recursos">Recursos y consejos</button>
+  <button id="btn-reset" class="" style="margin-left:auto" title="Borrar el progreso guardado de esta certificación">Reiniciar progreso</button>
+</nav>
+
+<!-- PLAN (lo rellena app.js) -->
+<section id="sec-plan" class="act"></section>
+
+<!-- TEMARIO -->
+<section id="sec-temario">
+  <div id="vista-caps"></div>
+  <div id="vista-cap" style="display:none"></div>
+</section>
+
+<!-- EJERCICIOS (lo rellena app.js) -->
+<section id="sec-ejercicios"></section>
+
+<!-- CASO DE ESTUDIO (lo rellena app.js) -->
+<section id="sec-caso"></section>
+
+<!-- EXAMEN FINAL -->
+<section id="sec-simulacro">
+  <div id="sim-inicio"></div>
+  <div id="sim-curso" style="display:none">
+    <div class="sim-barra">
+      <div><span class="info">PREGUNTA </span><span id="sim-pos" class="reloj" style="font-size:15px"></span></div>
+      <div class="reloj" id="sim-reloj">00:00</div>
+    </div>
+    <div class="mapa" id="sim-mapa"></div>
+    <div id="sim-pregunta"></div>
+    <div class="sim-nav">
+      <button class="btn sec" id="sim-ant">← Anterior</button>
+      <div style="display:flex;gap:10px">
+        <button class="btn sec" id="sim-sig">Siguiente →</button>
+        <button class="btn" id="sim-corregir">Corregir examen</button>
+      </div>
+    </div>
+  </div>
+  <div id="sim-final" style="display:none"></div>
+</section>
+
+<!-- GLOSARIO (lo rellena app.js) -->
+<section id="sec-glosario"></section>
+
+<!-- RECURSOS (lo rellena app.js) -->
+<section id="sec-recursos"></section>
+
+</div>
+
+<script src="assets/js/tema.js"></script>
+<script>
+/* Carga los datos de la certificación indicada en ?cert= y luego el motor. */
+(function(){
+  var permitidas={ 'foundation':1, 'ctal-tae':1 };
+  var params=new URLSearchParams(location.search);
+  var cert=params.get('cert');
+  if(!permitidas[cert]){ location.replace('index.html'); return; }
+  var ds=document.createElement('script');
+  ds.src='data/'+cert+'/datos.js';
+  ds.onload=function(){
+    var app=document.createElement('script');
+    app.src='assets/js/app.js';
+    document.body.appendChild(app);
+  };
+  ds.onerror=function(){
+    document.querySelector('.wrap').innerHTML='<p style="padding:40px 0">No se han podido cargar los datos de <b>'+cert+'</b>.</p>';
+  };
+  document.body.appendChild(ds);
+})();
+</script>
+</body>
+</html>

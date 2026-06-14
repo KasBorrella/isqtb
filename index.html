@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estudio ISTQB · Elige tu certificación</title>
+<script>/* Aplica el tema guardado antes de pintar para evitar parpadeo. */(function(){try{var t=localStorage.getItem('istqb:tema');if(t==='dark'||(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="home-head">
+  <div class="eyebrow">Plataforma de estudio</div>
+  <h1>Certificaciones ISTQB</h1>
+  <p class="sub">Estudia en español: temario completo, quizzes por capítulo y exámenes finales cronometrados. Todo funciona en tu navegador, sin cuentas ni conexión: tu progreso se guarda en este equipo.</p>
+</header>
+
+<div class="prog-grid" id="prog-grid"></div>
+
+<p class="sub" style="margin-top:24px;font-size:13px">El progreso se guarda localmente con <span class="term">localStorage</span>. Si borras los datos del navegador, se reinicia.</p>
+
+</div>
+
+<script src="assets/js/tema.js"></script>
+<script>
+/* Registro de certificaciones disponibles en la home. */
+var PROGRAMAS=[
+  {
+    id:"foundation",
+    nivel:"Nivel Básico · CTFL v4.0",
+    nombre:"ISTQB Foundation",
+    desc:"Fundamentos de la prueba de software: proceso, ciclo de vida, prueba estática, técnicas de diseño, gestión y herramientas.",
+    capitulos:6, preguntas:40, minutos:60,
+    disponible:true
+  },
+  {
+    id:"ctal-tae",
+    nivel:"Nivel Avanzado · CTAL-TAE v2.0",
+    nombre:"ISTQB Automation Tester",
+    desc:"Ingeniería de automatización de la prueba: testabilidad, arquitectura gTAA, implementación, despliegue en CI/CD, métricas y mejora continua.",
+    capitulos:8, preguntas:40, minutos:90,
+    disponible:true
+  }
+];
+
+function progresoDe(p){
+  try{
+    var raw=localStorage.getItem('istqb:'+p.id);
+    if(!raw) return {caps:0, examen:null};
+    var e=JSON.parse(raw);
+    return { caps:(e.capsOk||[]).length, examen:e.examen||null };
+  }catch(_){ return {caps:0, examen:null}; }
+}
+
+(function(){
+  var g=document.getElementById('prog-grid');
+  PROGRAMAS.forEach(function(p){
+    var pr=progresoDe(p);
+    var pct=p.capitulos?Math.round(pr.caps/p.capitulos*100):0;
+    var card;
+    if(p.disponible){
+      card=document.createElement('a');
+      card.href='app.html?cert='+p.id;
+      card.className='prog-card';
+    }else{
+      card=document.createElement('div');
+      card.className='prog-card proximo';
+    }
+    var examenTxt = pr.examen ? ('Examen: '+pr.examen.nota+'/'+pr.examen.total) : 'Examen: pendiente';
+    card.innerHTML=
+      '<div class="nivel">'+p.nivel+'</div>'+
+      '<h3>'+p.nombre+'</h3>'+
+      '<p>'+p.desc+'</p>'+
+      '<div class="meta-prog"><span>'+p.capitulos+' capítulos</span><span>Examen: '+p.preguntas+' preguntas</span><span>'+p.minutos+' min</span></div>'+
+      (p.disponible
+        ? '<div class="barra"><i style="width:'+pct+'%"></i></div>'+
+          '<div class="prog-txt">'+pr.caps+'/'+p.capitulos+' capítulos superados · '+examenTxt+'</div>'+
+          '<div class="ir">Empezar a estudiar →</div>'
+        : '<div class="prog-txt">En preparación</div>');
+    g.appendChild(card);
+  });
+})();
+</script>
+</body>
+</html>
