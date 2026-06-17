@@ -69,7 +69,8 @@ h1{font-family:var(--disp);font-weight:700;font-size:clamp(27px,4.6vw,40px);line
 .volver-home:hover{color:var(--acento)}
 
 /* ---------- Navegación ---------- */
-nav{display:flex;gap:8px;margin:20px 0 26px;flex-wrap:wrap;position:sticky;top:0;background:rgba(237,240,246,.82);backdrop-filter:saturate(180%) blur(10px);-webkit-backdrop-filter:saturate(180%) blur(10px);padding:12px 0;z-index:5;border-bottom:1px solid var(--linea)}
+nav{display:flex;gap:8px;margin:20px 0 26px;flex-wrap:nowrap;overflow-x:auto;position:sticky;top:0;background:rgba(237,240,246,.82);backdrop-filter:saturate(180%) blur(10px);-webkit-backdrop-filter:saturate(180%) blur(10px);padding:12px 0;z-index:5;border-bottom:1px solid var(--linea);scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
 nav button{border:1px solid var(--linea);background:var(--panel);color:var(--tinta);padding:9px 16px;border-radius:999px;font-size:14px;font-weight:500;box-shadow:var(--sombra);transition:transform .12s,border-color .15s,background .15s,color .15s}
 nav button:hover{border-color:var(--acento);transform:translateY(-1px)}
 nav button.act{background:linear-gradient(180deg,#202635,var(--tinta));border-color:var(--tinta);color:#fff;box-shadow:0 6px 16px rgba(20,25,37,.22)}
