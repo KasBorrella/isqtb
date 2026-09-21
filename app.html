@@ -22,14 +22,14 @@
 </header>
 
 <nav id="nav">
-  <button data-sec="plan" class="act">Plan de estudio</button>
-  <button data-sec="temario">Temario y quizzes</button>
+  <button data-sec="plan" class="act">Plan</button>
+  <button data-sec="temario">Temario</button>
+  <button data-sec="repaso" id="nav-repaso">Repaso</button>
   <button data-sec="ejercicios" id="nav-ejercicios">Ejercicios</button>
   <button data-sec="caso" id="nav-caso">Caso de estudio</button>
   <button data-sec="simulacro">Examen final</button>
   <button data-sec="glosario" id="nav-glosario">Glosario</button>
-  <button data-sec="recursos">Recursos y consejos</button>
-  <button id="btn-reset" class="" style="margin-left:auto" title="Borrar el progreso guardado de esta certificación">Reiniciar progreso</button>
+  <button data-sec="recursos">Recursos</button>
 </nav>
 
 <!-- PLAN (lo rellena app.js) -->
@@ -39,6 +39,12 @@
 <section id="sec-temario">
   <div id="vista-caps"></div>
   <div id="vista-cap" style="display:none"></div>
+</section>
+
+<!-- REPASO DIRIGIDO (lo rellena app.js) -->
+<section id="sec-repaso">
+  <div id="repaso-resumen"></div>
+  <div id="repaso-sesion" style="display:none"></div>
 </section>
 
 <!-- EJERCICIOS (lo rellena app.js) -->
@@ -56,10 +62,12 @@
       <div class="reloj" id="sim-reloj">00:00</div>
     </div>
     <div class="mapa" id="sim-mapa"></div>
+    <div class="sim-leyenda" id="sim-leyenda"></div>
     <div id="sim-pregunta"></div>
     <div class="sim-nav">
       <button class="btn sec" id="sim-ant">← Anterior</button>
-      <div style="display:flex;gap:10px">
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn sec" id="sim-pendiente" title="Saltar a la siguiente marcada o sin responder">⚑ Siguiente pendiente</button>
         <button class="btn sec" id="sim-sig">Siguiente →</button>
         <button class="btn" id="sim-corregir">Corregir examen</button>
       </div>

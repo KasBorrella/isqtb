@@ -1,0 +1,15 @@
+{
+  "name": "istqb-estudio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plataforma estática de estudio para certificaciones ISTQB (CTFL v4.0 y CTAL-TAE v2.0). La web no necesita build ni dependencias: esto solo sirve para ejecutar la suite de validación.",
+  "scripts": {
+    "test": "node test/ejecutar.js",
+    "test:datos": "node test/ejecutar.js datos",
+    "test:foundation": "node test/ejecutar.js --cert=foundation",
+    "test:ctal": "node test/ejecutar.js --cert=ctal-tae"
+  },
+  "devDependencies": {
+    "jsdom": "^24.0.0"
+  }
+}

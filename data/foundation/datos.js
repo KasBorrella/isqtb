@@ -11,15 +11,19 @@ const META={
   eyebrow:"ISTQB · Certified Tester Foundation Level",
   titulo:"Probador Certificado · Nivel Básico v4.0<br>Plan de estudio en 10 semanas",
   sub:"Temario en español, preguntas por capítulo y examen final cronometrado. El examen real: 40 preguntas tipo test, 60 minutos, nota de corte del 65 % (26/40).",
-  examen:{ preguntas:40, minutos:60, cortePorcentaje:65 },
+  /* `distribucion` = reparto oficial de preguntas por capítulo del examen real.
+     La suite de test comprueba que cada set lo respeta. */
+  examen:{ preguntas:40, minutos:60, cortePorcentaje:65,
+           distribucion:{ 1:8, 2:6, 3:4, 4:11, 5:9, 6:2 } },
   planIntro:`<div class="card">
     <h2>Cómo está montado el plan</h2>
-    <p>Está pensado para <strong>3–5 horas semanales</strong> durante 10 semanas. Cada semana combina la lectura de un capítulo, su quiz interactivo y, al final, exámenes completos cronometrados. Marca cada semana al completarla (el progreso se guarda en este navegador).</p>
+    <p>Está pensado para <strong>3–5 horas semanales</strong> durante 10 semanas. Cada semana cubre unas <strong>secciones concretas del syllabus</strong>: pulsa el cuerpo de la semana para abrir el temario por donde toca, o una de las pastillas de sección para ir directamente a ella. Marca cada semana al completarla (el progreso se guarda en este navegador).</p>
     <div class="nota"><strong>Formato del examen real:</strong> 40 preguntas de opción múltiple, 60 minutos, aprobado con el 65 % (26 de 40 puntos). Cada pregunta vale 1 punto. Si lo haces en un idioma que no es tu lengua materna, puedes solicitar un 25 % más de tiempo. La distribución oficial de preguntas por capítulo es: C1 = 8, C2 = 6, C3 = 4, C4 = 11, C5 = 9, C6 = 2.</div>
   </div>`,
   temarioIntro:`<div class="card">
       <h2>Los 6 capítulos del syllabus v4.0</h2>
-      <p>Cada capítulo incluye un resumen en español de los conceptos evaluables (objetivos de aprendizaje) y un quiz de 5 preguntas con corrección razonada. Un capítulo se marca como superado al acertar al menos 4 de 5.</p>
+      <p>Cada capítulo está dividido en las <strong>mismas secciones numeradas que el syllabus oficial</strong> (1.1, 1.2, 1.3…), y cada sección indica los <strong>objetivos de aprendizaje (LO)</strong> que se examinan en ella y su nivel K. Pulsa una sección en la tarjeta del capítulo para abrirlo justo en ese punto.</p>
+      <p>Al final de cada capítulo hay un quiz de 5 preguntas con corrección razonada. Un capítulo se marca como superado al acertar al menos 4 de 5.</p>
     </div>`,
   recursosHtml:`<div class="card">
     <h2>Exámenes oficiales (práctica)</h2>
@@ -74,16 +78,16 @@ const META={
    PLAN DE 10 SEMANAS
 ========================================================= */
 const SEMANAS=[
- {cap:1,t:"Capítulo 1 · Fundamentos de la prueba",d:"Lee el cap. 1. Domina: qué es probar (estática/dinámica, verificación/validación), objetivos, probar vs depurar, CC vs AC, la cadena error→defecto→fallo→causa raíz y los 7 principios. Haz el quiz del cap. 1."},
- {cap:1,t:"Capítulo 1 (II) · Proceso, productos y roles",d:"Actividades del proceso de prueba, productos de prueba, trazabilidad, roles (gestión de prueba y probador), competencias, enfoque de equipo completo e independencia de la prueba."},
- {cap:2,t:"Capítulo 2 · Prueba en el ciclo de vida",d:"Modelos CVDS (secuencial, iterativo, incremental, ágil), impacto en la prueba, enfoques test-first (DGP/DGPA/DGC), DevOps, desplazamiento a la izquierda y retrospectivas. Haz el quiz del cap. 2."},
- {cap:2,t:"Capítulo 2 (II) · Niveles y tipos de prueba",d:"Los 5 niveles de prueba, los 4 tipos (funcional, no funcional, caja negra, caja blanca), prueba de confirmación vs regresión y prueba de mantenimiento."},
- {cap:3,t:"Capítulo 3 · Prueba estática",d:"Fundamentos y valor de la prueba estática, estática vs dinámica, beneficios de la retroalimentación temprana, actividades del proceso de revisión, roles y tipos de revisión (informal, guiada, técnica, inspección). Haz el quiz del cap. 3."},
- {cap:4,t:"Capítulo 4 (I) · Técnicas de caja negra",d:"Partición de equivalencia, análisis del valor frontera (2 y 3 valores), tabla de decisión y transición de estado, con sus criterios de cobertura. Practica obteniendo casos de prueba a mano. Es el capítulo con más peso."},
- {cap:4,t:"Capítulo 4 (II) · Caja blanca, experiencia y colaboración",d:"Cobertura de sentencia y de rama (la rama subsume la sentencia), predicción de errores, prueba exploratoria y basada en lista de comprobación, historias de usuario (3C, INVEST), criterios de aceptación y DGPA. Haz el quiz del cap. 4."},
- {cap:5,t:"Capítulo 5 · Gestión de las actividades de prueba",d:"Plan de prueba, criterios de entrada/salida (DoR/DoD), técnicas de estimación, priorización, pirámide y cuadrantes de prueba, gestión del riesgo (proyecto vs producto), métricas, informes, gestión de configuración e informe de defecto. Haz el quiz del cap. 5."},
- {cap:6,t:"Capítulo 6 · Herramientas + repaso transversal",d:"Tipos de herramientas de prueba y ventajas/riesgos de la automatización. Repite los quizzes donde fallaste y repasa el glosario. Haz el quiz del cap. 6."},
- {sec:"simulacro",t:"Simulacros + ajuste final",d:"Haz el examen final de esta app en condiciones reales (60 min, sin apuntes) y los modelos oficiales A/B. Analiza cada fallo con su justificación y vuelve al capítulo correspondiente. Dos días antes: descanso y repaso ligero."}
+ {cap:1,subs:["1.1","1.2","1.3"],t:"Capítulo 1 (I) · 1.1–1.3 Qué es probar y los 7 principios",d:"Secciones 1.1 a 1.3. Qué es probar (estática/dinámica, verificación/validación) y sus objetivos, probar frente a depurar, por qué es necesario probar, CC vs AC, la cadena error→defecto→fallo→causa raíz y los siete principios."},
+ {cap:1,subs:["1.4","1.5"],t:"Capítulo 1 (II) · 1.4–1.5 Proceso, productos, roles y competencias",d:"Secciones 1.4 y 1.5. Las siete actividades del proceso de prueba, el impacto del contexto, los productos de prueba y la trazabilidad, los roles (gestión de la prueba y probador), las competencias genéricas, el enfoque de equipo completo y la independencia. Haz el quiz del cap. 1."},
+ {cap:2,subs:["2.1"],t:"Capítulo 2 (I) · 2.1 La prueba en el ciclo de vida",d:"Sección 2.1 completa. Modelos de CVDS (secuencial, iterativo, incremental, ágil) y su impacto, buenas prácticas comunes a todos ellos, enfoques test-first (DGP/DGPA/DGC), DevOps con IC/EC, desplazamiento a la izquierda y retrospectivas."},
+ {cap:2,subs:["2.2","2.3"],t:"Capítulo 2 (II) · 2.2–2.3 Niveles, tipos y mantenimiento",d:"Secciones 2.2 y 2.3. Los 5 niveles de prueba y qué distingue a cada uno, los 4 tipos (funcional, no funcional, caja negra, caja blanca), confirmación frente a regresión, y la prueba de mantenimiento con sus tres desencadenantes y el análisis de impacto. Haz el quiz del cap. 2."},
+ {cap:3,subs:["3.1","3.2"],t:"Capítulo 3 · 3.1–3.2 Prueba estática y revisiones",d:"Secciones 3.1 y 3.2. Fundamentos y valor de la prueba estática, productos examinables, análisis estático, estática frente a dinámica; y el proceso de revisión: beneficios de la retroalimentación temprana, actividades, roles, tipos (informal, guiada, técnica, inspección) y factores de éxito. Haz el quiz del cap. 3."},
+ {cap:4,subs:["4.1","4.2"],t:"Capítulo 4 (I) · 4.1–4.2 Técnicas de caja negra",d:"Secciones 4.1 y 4.2. Las tres familias de técnicas y, con ejemplos resueltos, partición de equivalencia, análisis del valor frontera (2 y 3 valores), tabla de decisión y transición de estado con sus criterios de cobertura. Practica obteniendo casos de prueba a mano: es el capítulo con más peso (11 preguntas)."},
+ {cap:4,subs:["4.3","4.4","4.5"],t:"Capítulo 4 (II) · 4.3–4.5 Caja blanca, experiencia y colaboración",d:"Secciones 4.3 a 4.5. Cobertura de sentencia y de rama (la rama subsume la sentencia) y el valor de la caja blanca; predicción de errores, prueba exploratoria y basada en lista de comprobación; historias de usuario (3C, INVEST), criterios de aceptación y DGPA. Haz el quiz del cap. 4."},
+ {cap:5,subs:["5.1","5.2","5.3","5.4","5.5"],t:"Capítulo 5 · 5.1–5.5 Gestión de las actividades de prueba",d:"Las cinco secciones del capítulo: plan de prueba y criterios de entrada/salida (DoR/DoD), estimación, priorización, pirámide y cuadrantes; gestión del riesgo (proyecto vs producto); monitorización, control, compleción, métricas e informes; gestión de la configuración; y el informe de defecto. Haz el quiz del cap. 5."},
+ {cap:6,subs:["6.1","6.2"],t:"Capítulo 6 · 6.1–6.2 Herramientas + repaso transversal",d:"Secciones 6.1 y 6.2. Tipos de herramientas de apoyo a la prueba y ventajas y riesgos de la automatización. Repite los quizzes donde fallaste y repasa el glosario. Haz el quiz del cap. 6."},
+ {sec:"simulacro",t:"Simulacros + ajuste final",d:"Haz el examen final de esta app en condiciones reales (60 min, sin apuntes) y los modelos oficiales A/B. Analiza cada fallo con su justificación y vuelve a la sección concreta del temario desde el desglose por capítulo. Dos días antes: descanso y repaso ligero."}
 ];
 
 /* =========================================================
@@ -91,7 +95,11 @@ const SEMANAS=[
 ========================================================= */
 const CAPS=[
 {n:1,titulo:"Fundamentos del proceso de prueba",
- html:`
+ resumen:"Qué es probar y qué no, por qué es necesario, los siete principios, las actividades y productos del proceso de prueba, y las competencias e independencia de quien prueba.",
+ secciones:[
+  {id:"1.1",titulo:"¿Qué es probar?",
+   lo:[{id:"FL-1.1.1",k:"K1",t:"Identificar objetivos de prueba característicos."},{id:"FL-1.1.2",k:"K2",t:"Diferenciar entre probar y depurar."}],
+   html:`
  <h3>¿Qué es probar?</h3>
  <p>La <strong>prueba de software</strong> es un conjunto de actividades para descubrir defectos y <strong>evaluar la calidad</strong> de los artefactos de software (los <em>objetos de prueba</em>). No se reduce a ejecutar el software: incluye planificar, analizar, diseñar y revisar. Implica <strong>verificación</strong> (comprobar que el sistema cumple los requisitos especificados) y <strong>validación</strong> (comprobar que satisface las necesidades reales de los usuarios).</p>
  <ul>
@@ -101,11 +109,27 @@ const CAPS=[
  <h3>Objetivos de la prueba</h3>
  <p>Evaluar productos de trabajo, provocar fallos y encontrar defectos, asegurar la cobertura necesaria, reducir el nivel de riesgo, verificar el cumplimiento de requisitos (incluidos contractuales/legales), proporcionar información para decisiones, generar confianza y validar que el objeto de prueba funciona como esperan los implicados. Los objetivos <strong>dependen del contexto</strong>.</p>
  <h3>Probar y depurar</h3>
- <p>Son actividades distintas. La <strong>prueba</strong> desencadena fallos o encuentra defectos; la <strong>depuración</strong> (no es una actividad de prueba) los localiza y elimina: reproducir el fallo, diagnosticar la causa raíz y corregirla. Después, una <strong>prueba de confirmación</strong> comprueba que la corrección funcionó.</p>
+ <p>Son actividades distintas. La <strong>prueba</strong> desencadena fallos o encuentra defectos; la <strong>depuración</strong> (no es una actividad de prueba) los localiza y elimina: reproducir el fallo, diagnosticar la causa raíz y corregirla. Después, una <strong>prueba de confirmación</strong> comprueba que la corrección funcionó.</p>`},
+  {id:"1.2",titulo:"¿Por qué es necesario probar?",
+   lo:[{id:"FL-1.2.1",k:"K2",t:"Aportar ejemplos de por qué es necesario realizar pruebas."},{id:"FL-1.2.2",k:"K1",t:"Recordar la relación entre prueba y aseguramiento de la calidad."},{id:"FL-1.2.3",k:"K2",t:"Distinguir entre causa raíz, error, defecto y fallo."}],
+   html:`
+ <h3>Contribuciones de la prueba al éxito</h3>
+ <p>Probar no es un trámite: aporta valor medible en cada fase del ciclo de vida. El syllabus recoge estas contribuciones típicas:</p>
+ <ul>
+  <li><strong>Detectar defectos barato.</strong> Involucrar a probadores en la revisión de requisitos y en el diseño hace aflorar defectos antes de que se conviertan en código, que es cuando corregirlos cuesta más.</li>
+  <li><strong>Reducir el riesgo de fallos en operación.</strong> Probar a lo largo del desarrollo (no solo al final) baja la probabilidad de que queden defectos sin descubrir en producción.</li>
+  <li><strong>Cumplir requisitos contractuales, legales o normativos.</strong> En sectores regulados, la prueba es la evidencia exigida de que el producto cumple.</li>
+  <li><strong>Informar la toma de decisiones.</strong> La prueba aporta datos objetivos (cobertura, defectos, riesgo residual) para decidir si se entrega o no.</li>
+  <li><strong>Representar al usuario.</strong> El probador aporta la perspectiva de quien usará el sistema y defiende que el producto sea el que realmente se necesitaba.</li>
+ </ul>
+ <p>Cuando la prueba falta o se hace tarde, el coste no desaparece: se traslada a incidencias en producción, pérdida de reputación, sanciones o retrabajo.</p>
  <h3>Aseguramiento (AC) vs Control (CC) de la calidad</h3>
  <p>La prueba es una forma de <strong>control de la calidad (CC)</strong>: enfoque <em>correctivo</em> orientado al <em>producto</em>. El <strong>aseguramiento de la calidad (AC)</strong> es <em>preventivo</em> y orientado al <em>proceso</em> (si un buen proceso se sigue bien, produce un buen producto). No son lo mismo.</p>
  <h3>Errores, defectos, fallos y causas raíz</h3>
- <p>Una persona comete un <strong>error</strong> (equivocación) que introduce un <strong>defecto</strong> en un producto de trabajo; si se ejecuta ese defecto, puede producirse un <strong>fallo</strong> (comportamiento incorrecto observable). No todos los defectos provocan fallos. La <strong>causa raíz</strong> es la razón fundamental del problema; tratarla evita defectos similares.</p>
+ <p>Una persona comete un <strong>error</strong> (equivocación) que introduce un <strong>defecto</strong> en un producto de trabajo; si se ejecuta ese defecto, puede producirse un <strong>fallo</strong> (comportamiento incorrecto observable). No todos los defectos provocan fallos. La <strong>causa raíz</strong> es la razón fundamental del problema; tratarla evita defectos similares.</p>`},
+  {id:"1.3",titulo:"Principios de la prueba",
+   lo:[{id:"FL-1.3.1",k:"K2",t:"Explicar los siete principios de la prueba."}],
+   html:`
  <h3>Los 7 principios de la prueba</h3>
  <ol>
   <li><strong>La prueba muestra la presencia de defectos, no su ausencia.</strong></li>
@@ -116,9 +140,10 @@ const CAPS=[
   <li><strong>La prueba depende del contexto.</strong></li>
   <li><strong>Falacia de la ausencia de defectos:</strong> un sistema sin defectos puede seguir sin satisfacer las necesidades del usuario (hace falta validación, no solo verificación).</li>
  </ol>
- <h3>Proceso, productos y roles</h3>
- <p>El proceso de prueba agrupa actividades (a menudo iterativas o en paralelo): planificación, monitorización y control, análisis (¿qué probar?), diseño (¿cómo probar?), implementación, ejecución y compleción. Genera <strong>productos de prueba</strong> (plan, condiciones, casos, datos, informes...). La <strong>trazabilidad</strong> entre la base de prueba y los productos de prueba permite evaluar cobertura y analizar el impacto de los cambios.</p>
- <p>Dos roles principales: <strong>gestión de la prueba</strong> (responsabilidad global del proceso y del equipo) y <strong>probador</strong> (actividades técnicas). El <strong>enfoque de equipo completo</strong> (whole-team) reparte la responsabilidad de la calidad en todo el equipo. La <strong>independencia de la prueba</strong> (que pruebe alguien distinto del autor) suele encontrar más defectos, pero un exceso puede aislar al equipo de prueba.</p>
+ <div class="nota">Truco de examen: si una frase contiene un absoluto («demuestra que NO hay defectos», «probar TODO es posible», «la automatización elimina la prueba manual»), casi siempre es un distractor que choca con los 7 principios.</div>`},
+  {id:"1.4",titulo:"Actividades, productos y roles de prueba",
+   lo:[{id:"FL-1.4.1",k:"K2",t:"Resumir las diferentes actividades y tareas de prueba."},{id:"FL-1.4.2",k:"K2",t:"Explicar el impacto del contexto en el proceso de prueba."},{id:"FL-1.4.3",k:"K2",t:"Diferenciar el producto de prueba que soporta las actividades de prueba."},{id:"FL-1.4.4",k:"K2",t:"Explicar el valor de mantener la trazabilidad."},{id:"FL-1.4.5",k:"K2",t:"Comparar los diferentes roles en la prueba."}],
+   html:`
  <h3>Las actividades del proceso de prueba en detalle</h3>
  <p>Aunque dependen del contexto, hay un conjunto común de actividades (a menudo iterativas o solapadas):</p>
  <table>
@@ -131,36 +156,71 @@ const CAPS=[
   <tr><td><strong>Ejecución</strong></td><td>Ejecutar las pruebas, comparar resultados reales con esperados y registrar los resultados.</td></tr>
   <tr><td><strong>Compleción</strong></td><td>Consolidar la experiencia, archivar el testware reutilizable y elaborar el informe de compleción (en hitos: fin de nivel, iteración, entrega).</td></tr>
  </table>
+ <h3>El proceso de prueba en contexto</h3>
+ <p>No hay un proceso de prueba universal: <strong>se adapta al contexto</strong>. Factores que lo condicionan:</p>
+ <ul>
+  <li><strong>Los implicados</strong> (necesidades, expectativas, disposición a colaborar, nivel de exigencia).</li>
+  <li><strong>El equipo</strong> (competencias, conocimiento del dominio, experiencia con herramientas).</li>
+  <li><strong>El dominio de negocio</strong> (criticidad del producto, riesgos identificados, regulación aplicable).</li>
+  <li><strong>Los factores técnicos</strong> (tipo de software, arquitectura, tecnología empleada).</li>
+  <li><strong>Las restricciones del proyecto</strong> (alcance, tiempo, presupuesto, recursos).</li>
+  <li><strong>Los factores organizativos</strong> (estructura, políticas, prácticas en uso).</li>
+  <li><strong>El ciclo de vida de desarrollo</strong> (prácticas de ingeniería, métodos ágiles o secuenciales).</li>
+  <li><strong>Las herramientas</strong> disponibles (disponibilidad, usabilidad, grado de cumplimiento).</li>
+ </ul>
+ <p>El contexto decide qué actividades se hacen, con qué profundidad, en qué orden y con cuánta documentación. Dos proyectos de la misma empresa pueden tener procesos de prueba muy distintos y ambos ser correctos.</p>
  <h3>Productos de prueba (testware) y base de prueba</h3>
  <p>Cada actividad genera <strong>productos de prueba</strong>: de la planificación salen el plan de prueba y el calendario; del análisis, las condiciones de prueba; del diseño, los casos de prueba y los datos; de la ejecución, los registros de prueba y los informes de defecto; de la compleción, los informes de compleción. La <strong>base de prueba</strong> es la información de la que se derivan las pruebas (requisitos, historias de usuario, especificaciones, riesgos). La <strong>trazabilidad</strong> bidireccional entre base de prueba, condiciones, casos, resultados y defectos permite medir la cobertura, valorar el impacto de un cambio y dar soporte a auditorías.</p>
+ <h3>Roles en la prueba</h3>
+ <p>El syllabus distingue dos roles principales, que una misma persona puede desempeñar en momentos distintos:</p>
+ <table>
+  <tr><th>Rol</th><th>De qué se ocupa</th></tr>
+  <tr><td><strong>Gestión de la prueba</strong></td><td>Responsabilidad global del proceso de prueba, del equipo y del liderazgo de las actividades: planificación, monitorización y control, y elaboración de los informes de prueba.</td></tr>
+  <tr><td><strong>Probador</strong></td><td>Responsabilidad técnica: análisis, diseño, implementación y ejecución de las pruebas, y evaluación de los resultados.</td></tr>
+ </table>
+ <p>El reparto depende del contexto: en un proyecto ágil, parte de las tareas de gestión de la prueba las asume el propio equipo; en proyectos grandes o regulados, suele existir un rol de gestión dedicado. Que ambos roles existan no impide el <strong>enfoque de equipo completo</strong>: la calidad sigue siendo responsabilidad de todos.</p>`},
+  {id:"1.5",titulo:"Competencias esenciales y buenas prácticas",
+   lo:[{id:"FL-1.5.1",k:"K2",t:"Dar ejemplos de las competencias genéricas necesarias para probar."},{id:"FL-1.5.2",k:"K1",t:"Recordar las ventajas del enfoque de equipo completo."},{id:"FL-1.5.3",k:"K2",t:"Distinguir las ventajas e inconvenientes de la independencia de la prueba."}],
+   html:`
  <h3>Competencias del probador y enfoque de equipo completo</h3>
  <p>Probar es una actividad intelectual: requiere <strong>competencias genéricas</strong> (conocimiento del dominio y de la prueba, pensamiento analítico y crítico, comunicación, atención al detalle, curiosidad, escepticismo) y <strong>competencias interpersonales</strong> para comunicar malas noticias de forma constructiva. El <strong>enfoque de equipo completo</strong> (whole-team) reparte la responsabilidad de la calidad en todo el equipo: cualquier miembro con conocimientos de prueba contribuye, lo que fomenta la colaboración pero exige que los probadores trabajen estrechamente con desarrollo y negocio.</p>
  <h3>Independencia de la prueba</h3>
- <p>Probar con cierta <strong>independencia</strong> (que no pruebe solo el autor del código) suele aumentar la efectividad, porque un punto de vista distinto detecta tipos de defecto que el autor no ve por sesgo de confirmación. Grados: el propio autor, un compañero del equipo, un equipo de prueba independiente dentro de la organización, o externos. <strong>Ventajas:</strong> reconoce distintos fallos y es más objetivo. <strong>Inconvenientes:</strong> aislamiento del equipo, cuello de botella, y que desarrollo pierda el sentido de responsabilidad sobre la calidad. Lo habitual es combinar varios niveles de independencia.</p>
- <div class="nota">Truco de examen: si una frase contiene un absoluto («demuestra que NO hay defectos», «probar TODO es posible», «la automatización elimina la prueba manual»), casi siempre es un distractor que choca con los 7 principios.</div>`,
+ <p>Probar con cierta <strong>independencia</strong> (que no pruebe solo el autor del código) suele aumentar la efectividad, porque un punto de vista distinto detecta tipos de defecto que el autor no ve por sesgo de confirmación. Grados: el propio autor, un compañero del equipo, un equipo de prueba independiente dentro de la organización, o externos. <strong>Ventajas:</strong> reconoce distintos fallos y es más objetivo. <strong>Inconvenientes:</strong> aislamiento del equipo, cuello de botella, y que desarrollo pierda el sentido de responsabilidad sobre la calidad. Lo habitual es combinar varios niveles de independencia.</p>`}
+ ],
  quiz:[
-  {k:"k2",q:"¿Qué afirmación describe correctamente la diferencia entre verificación y validación?",
+  {id:"q1-1",sec:"1.1",k:"k2",q:"¿Qué afirmación describe correctamente la diferencia entre verificación y validación?",
    op:["Verificación es comprobar que se satisfacen las necesidades del usuario; validación es comprobar que se cumple la especificación","Verificación es comprobar que se cumple la especificación; validación es comprobar que se satisfacen las necesidades del usuario","Son sinónimos: ambas comprueban el cumplimiento de requisitos","Verificación solo se hace con prueba dinámica y validación solo con prueba estática"],
    c:1,e:"Verificar responde a «¿cumple la especificación?» y validar a «¿satisface las necesidades reales del usuario?». La prueba implica ambas. Tanto la estática como la dinámica pueden servir para verificar y validar."},
-  {k:"k2",q:"Un programador escribe «>=» donde el requisito pedía «>». Al ejecutarse esa línea, el sistema acepta un valor que debería rechazar. ¿Cómo se denominan, respectivamente, la equivocación del programador, el «>=» en el código y el comportamiento observado?",
+  {id:"q1-2",sec:"1.2",k:"k2",q:"Un programador escribe «>=» donde el requisito pedía «>». Al ejecutarse esa línea, el sistema acepta un valor que debería rechazar. ¿Cómo se denominan, respectivamente, la equivocación del programador, el «>=» en el código y el comportamiento observado?",
    op:["Defecto, fallo y error","Error, defecto y fallo","Fallo, error y defecto","Causa raíz, error y defecto"],
    c:1,e:"La persona comete un error (equivocación), que introduce un defecto en el código (el «>=»), que al ejecutarse provoca un fallo (comportamiento incorrecto observable). Es la cadena error → defecto → fallo."},
-  {k:"k2",q:"¿Cuál de las siguientes es la mejor descripción del aseguramiento de la calidad (AC)?",
+  {id:"q1-3",sec:"1.2",k:"k2",q:"¿Cuál de las siguientes es la mejor descripción del aseguramiento de la calidad (AC)?",
    op:["Un enfoque correctivo orientado al producto, del que la prueba es el principal ejemplo","Un enfoque preventivo orientado al proceso, basado en que un buen proceso bien seguido produce un buen producto","La actividad de localizar y corregir los defectos encontrados durante la prueba","La ejecución de pruebas de regresión automatizadas tras cada cambio"],
    c:1,e:"El AC es preventivo y orientado al proceso. La prueba es control de calidad (CC): correctivo y orientado al producto. Localizar y corregir defectos es depuración, no AC."},
-  {k:"k2",q:"Un equipo lleva un año ejecutando exactamente el mismo juego de pruebas de regresión y ya casi no encuentra defectos nuevos. ¿Qué principio de la prueba explica este fenómeno?",
+  {id:"q1-4",sec:"1.3",k:"k2",q:"Un equipo lleva un año ejecutando exactamente el mismo juego de pruebas de regresión y ya casi no encuentra defectos nuevos. ¿Qué principio de la prueba explica este fenómeno?",
    op:["Los defectos se agrupan","La prueba exhaustiva es imposible","Las pruebas se desgastan (paradoja del pesticida)","La falacia de la ausencia de defectos"],
    c:2,e:"Repetir las mismas pruebas las vuelve cada vez menos efectivas para hallar defectos nuevos (paradoja del pesticida). La solución es revisar y renovar las pruebas y los datos de prueba."},
-  {k:"k2",q:"Tras corregir un defecto, ¿qué actividad NO forma parte de la prueba propiamente dicha?",
+  {id:"q1-5",sec:"1.1",k:"k2",q:"Tras corregir un defecto, ¿qué actividad NO forma parte de la prueba propiamente dicha?",
    op:["La prueba de confirmación que comprueba que el defecto se ha resuelto","La prueba de regresión que comprueba que el cambio no rompió otras partes","La depuración: reproducir, diagnosticar la causa raíz y corregir el defecto","El análisis de prueba para identificar nuevas condiciones de prueba"],
    c:2,e:"La depuración (reproducir, diagnosticar y corregir) es responsabilidad del desarrollo, no es una actividad de prueba. La confirmación, la regresión y el análisis sí lo son."}
  ]},
 
 {n:2,titulo:"Prueba a lo largo del ciclo de vida de desarrollo",
- html:`
+ resumen:"Cómo cambia la prueba según el modelo de ciclo de vida, los enfoques que la ponen por delante del código (test-first, DevOps, shift-left), los cinco niveles y los cuatro tipos de prueba, y qué se prueba cuando el sistema ya está en producción.",
+ secciones:[
+  {id:"2.1",titulo:"La prueba en el contexto de un ciclo de vida de desarrollo",
+   lo:[{id:"FL-2.1.1",k:"K2",t:"Explicar el impacto del ciclo de vida de desarrollo de software elegido en la prueba."},{id:"FL-2.1.2",k:"K1",t:"Recordar las buenas prácticas de prueba que se aplican a todos los ciclos de vida."},{id:"FL-2.1.3",k:"K1",t:"Recordar los ejemplos de enfoques de prueba primero (test-first) para el desarrollo."},{id:"FL-2.1.4",k:"K2",t:"Resumir cómo DevOps puede tener un impacto en la prueba."},{id:"FL-2.1.5",k:"K2",t:"Explicar el enfoque de desplazamiento a la izquierda."},{id:"FL-2.1.6",k:"K2",t:"Explicar cómo se pueden utilizar las retrospectivas como mecanismo para la mejora del proceso."}],
+   html:`
  <h3>Modelos de ciclo de vida (CVDS) y su impacto</h3>
  <p>Un modelo de CVDS describe cómo se relacionan las fases del desarrollo. Tipos: <strong>secuenciales</strong> (cascada, modelo en V), <strong>iterativos</strong> (espiral, prototipado) e <strong>incrementales</strong> (Proceso Unificado), además de prácticas <strong>Ágiles</strong> (Scrum, XP, Kanban...). La elección del CVDS influye en el alcance y cronología de la prueba, el nivel de documentación, las técnicas, el grado de automatización y el rol del probador.</p>
  <p><strong>Buenas prácticas independientes del modelo:</strong> cada actividad de desarrollo tiene su actividad de prueba; cada nivel de prueba tiene objetivos específicos (sin redundancia); el análisis y diseño de prueba empieza durante la fase de desarrollo correspondiente (prueba temprana); y los probadores revisan los productos de trabajo en cuanto hay borradores.</p>
+ <h3>Tipos de modelos de ciclo de vida</h3>
+ <ul>
+  <li><strong>Secuenciales</strong> (cascada, modelo en V): cada fase empieza al terminar la anterior. En el modelo en V cada fase de desarrollo tiene su nivel de prueba asociado. La prueba dinámica solo puede empezar tarde, cuando hay código ejecutable; pero las actividades estáticas (revisión de requisitos, diseño de pruebas) sí se adelantan.</li>
+  <li><strong>Iterativos</strong> (espiral, prototipado): el sistema se construye en ciclos repetidos que refinan el producto.</li>
+  <li><strong>Incrementales</strong> (Proceso Unificado): se entrega funcionalidad en trozos sucesivos. Iterativos e incrementales permiten probar estática y dinámicamente en cada incremento, con regresión frecuente.</li>
+  <li><strong>Ágiles</strong> (Scrum, XP, Kanban): asumen el cambio durante todo el proyecto; favorecen documentación ligera, mucha automatización de regresión y técnicas basadas en la experiencia.</li>
+ </ul>
  <h3>La prueba como impulsor del desarrollo (test-first)</h3>
  <ul>
   <li><strong>DGP (TDD):</strong> primero la prueba, luego el código que la satisface, luego refactorizar.</li>
@@ -170,6 +230,19 @@ const CAPS=[
  <p>Los tres aplican la prueba temprana y el <strong>desplazamiento a la izquierda</strong> (shift-left): probar lo antes posible, sin descuidar la prueba posterior.</p>
  <h3>DevOps y retrospectivas</h3>
  <p><strong>DevOps</strong> une desarrollo (con prueba) y operaciones con prácticas de <strong>integración continua (IC)</strong> y <strong>entrega continua (EC)</strong>: feedback rápido, regresión automatizada y entornos estables; pero exige montar y mantener la canalización y las pruebas automatizadas, y la prueba manual sigue siendo necesaria. Las <strong>retrospectivas</strong> (qué fue bien, qué mejorar, cómo) impulsan la mejora continua del proceso y del equipo.</p>
+ <h3>Desplazamiento a la izquierda (shift-left)</h3>
+ <p>El <strong>desplazamiento a la izquierda</strong> consiste en llevar la prueba lo más pronto posible dentro del ciclo de vida, aplicando el principio de prueba temprana. Formas concretas de hacerlo:</p>
+ <ul>
+  <li><strong>Revisar requisitos, historias de usuario y diseños</strong> en cuanto hay borradores, en lugar de esperar al código.</li>
+  <li><strong>Escribir los casos de prueba antes de implementar</strong> (DGP, DGPA, DGC), de forma que la prueba guíe el desarrollo.</li>
+  <li><strong>Usar integración continua y entrega continua</strong> con pruebas automatizadas rápidas en cada cambio.</li>
+  <li><strong>Aplicar análisis estático</strong> sobre el código desde el primer commit.</li>
+  <li><strong>Realizar pruebas no funcionales pronto</strong> (rendimiento, seguridad): descubrir tarde un problema estructural de rendimiento puede comprometer el proyecto entero.</li>
+ </ul>
+ <div class="nota">Desplazar a la izquierda <strong>no</strong> significa suprimir la prueba posterior: la prueba de sistema, de aceptación y de regresión siguen siendo necesarias. Tampoco es gratis: exige esfuerzo adicional al principio, que se recupera con creces al abaratar la corrección de defectos.</div>`},
+  {id:"2.2",titulo:"Niveles de prueba y tipos de prueba",
+   lo:[{id:"FL-2.2.1",k:"K2",t:"Distinguir los diferentes niveles de prueba."},{id:"FL-2.2.2",k:"K2",t:"Distinguir los diferentes tipos de prueba."},{id:"FL-2.2.3",k:"K2",t:"Distinguir la prueba de confirmación de la prueba de regresión."}],
+   html:`
  <h3>Niveles de prueba (5)</h3>
  <table>
   <tr><th>Nivel</th><th>Se concentra en</th></tr>
@@ -179,54 +252,84 @@ const CAPS=[
   <tr><td><strong>Integración de sistemas</strong></td><td>Interfaces con otros sistemas y servicios externos.</td></tr>
   <tr><td><strong>Prueba de aceptación</strong></td><td>Validación y preparación para el despliegue (PAU, operativa, contractual/regulatoria, alfa, beta).</td></tr>
  </table>
- <h3>Tipos de prueba (4)</h3>
- <p><strong>Funcional</strong> («qué» hace: completitud, corrección y pertinencia), <strong>no funcional</strong> («lo bien» que se comporta: rendimiento, usabilidad, fiabilidad, seguridad... según ISO 25010), <strong>caja negra</strong> (basada en la especificación) y <strong>caja blanca</strong> (basada en la estructura/código). Los cuatro tipos se aplican en cualquier nivel.</p>
- <h3>Confirmación, regresión y mantenimiento</h3>
- <p>La <strong>prueba de confirmación</strong> verifica que un defecto se corrigió; la <strong>prueba de regresión</strong> verifica que el cambio no introdujo efectos adversos en lo que ya funcionaba (buena candidata a automatizar; conviene un <em>análisis de impacto</em>). La <strong>prueba de mantenimiento</strong> se dispara por modificaciones (mejoras, correctivos, hotfix), migraciones/actualizaciones del entorno y retirada del sistema.</p>
- <h3>Tipos de modelos de ciclo de vida</h3>
- <ul>
-  <li><strong>Secuenciales</strong> (cascada, modelo en V): cada fase empieza al terminar la anterior. En el modelo en V cada fase de desarrollo tiene su nivel de prueba asociado. La prueba dinámica solo puede empezar tarde, cuando hay código ejecutable; pero las actividades estáticas (revisión de requisitos, diseño de pruebas) sí se adelantan.</li>
-  <li><strong>Iterativos</strong> (espiral, prototipado): el sistema se construye en ciclos repetidos que refinan el producto.</li>
-  <li><strong>Incrementales</strong> (Proceso Unificado): se entrega funcionalidad en trozos sucesivos. Iterativos e incrementales permiten probar estática y dinámicamente en cada incremento, con regresión frecuente.</li>
-  <li><strong>Ágiles</strong> (Scrum, XP, Kanban): asumen el cambio durante todo el proyecto; favorecen documentación ligera, mucha automatización de regresión y técnicas basadas en la experiencia.</li>
- </ul>
  <h3>Qué distingue a cada nivel de prueba</h3>
  <p>Para evitar solapamientos y huecos, los niveles se diferencian por: <strong>objeto de prueba</strong>, <strong>objetivos</strong>, <strong>base de prueba</strong>, <strong>defectos y fallos típicos</strong>, y <strong>enfoque y responsabilidades</strong>. Por ejemplo, la prueba de componente la hacen los desarrolladores sobre el código con base en el diseño de componentes; la prueba de aceptación la hacen los usuarios sobre el sistema completo con base en requisitos de negocio, procesos y criterios de aceptación.</p>
+ <h3>Tipos de prueba (4)</h3>
+ <p><strong>Funcional</strong> («qué» hace: completitud, corrección y pertinencia), <strong>no funcional</strong> («lo bien» que se comporta: rendimiento, usabilidad, fiabilidad, seguridad... según ISO 25010), <strong>caja negra</strong> (basada en la especificación) y <strong>caja blanca</strong> (basada en la estructura/código). Los cuatro tipos se aplican en cualquier nivel.</p>
  <h3>Características de calidad no funcionales (ISO/IEC 25010)</h3>
  <p>La prueba no funcional comprueba «lo bien» que se comporta el sistema según estas características: <strong>eficiencia de desempeño</strong> (rendimiento), <strong>compatibilidad</strong>, <strong>usabilidad</strong>, <strong>fiabilidad</strong>, <strong>seguridad</strong>, <strong>mantenibilidad</strong> y <strong>portabilidad</strong>. Conviene probarlas pronto, porque un defecto no funcional descubierto tarde (p. ej., un problema de rendimiento estructural) puede amenazar todo el proyecto. Muchas pruebas no funcionales se derivan de pruebas funcionales añadiendo una restricción (tiempo de respuesta, plataforma, carga).</p>
  <h3>Caja negra y caja blanca como tipos de prueba</h3>
  <p>Además de funcional/no funcional, se distinguen la prueba de <strong>caja negra</strong> (basada en la especificación: comprueba el comportamiento frente a lo especificado) y la de <strong>caja blanca</strong> (basada en la estructura: cubre el código/arquitectura interna). Los cuatro tipos pueden aplicarse en cualquier nivel, con distinto enfoque.</p>
- <div class="nota">No confundas <strong>nivel</strong> (cuándo/sobre qué granularidad se prueba: componente, integración, sistema, aceptación) con <strong>tipo</strong> (qué objetivo persigue: funcional, no funcional, caja negra, caja blanca). Un mismo tipo puede aplicarse en varios niveles.</div>`,
+ <div class="nota">No confundas <strong>nivel</strong> (cuándo/sobre qué granularidad se prueba: componente, integración, sistema, aceptación) con <strong>tipo</strong> (qué objetivo persigue: funcional, no funcional, caja negra, caja blanca). Un mismo tipo puede aplicarse en varios niveles.</div>
+ <h3>Prueba de confirmación y prueba de regresión</h3>
+ <p>La <strong>prueba de confirmación</strong> (o de repetición) verifica que un defecto se ha corregido de verdad: se vuelve a ejecutar el caso de prueba que lo reveló, sobre la versión corregida. Si el defecto se corrigió con un cambio distinto al previsto, puede hacer falta diseñar pruebas nuevas.</p>
+ <p>La <strong>prueba de regresión</strong> verifica que el cambio no ha provocado efectos adversos en partes que no se han tocado, ya sea en el propio objeto de prueba o en otros componentes del mismo sistema o de sistemas conectados. Como se repite en cada entrega, es la candidata natural a la <strong>automatización</strong>; un <strong>análisis de impacto</strong> ayuda a decidir hasta dónde llega el juego de regresión.</p>
+ <p>Ambas se ejecutan en todos los niveles de prueba y se disparan por el mismo motivo: un cambio en el código o en el entorno.</p>`},
+  {id:"2.3",titulo:"Prueba de mantenimiento",
+   lo:[{id:"FL-2.3.1",k:"K2",t:"Resumir la prueba de mantenimiento y sus desencadenantes."}],
+   html:`
+ <h3>Qué es y cuándo se hace</h3>
+ <p>Una vez desplegado, un sistema sigue vivo y cambia. La <strong>prueba de mantenimiento</strong> es la que se realiza sobre un sistema ya en operación cuando se modifica, se migra o se retira. Su objetivo doble es comprobar que el cambio funciona (prueba de confirmación de lo nuevo) y que no ha roto lo que ya funcionaba (prueba de regresión).</p>
+ <h3>Los tres desencadenantes</h3>
+ <table>
+  <tr><th>Desencadenante</th><th>Ejemplos</th><th>Qué se prueba</th></tr>
+  <tr><td><strong>Modificación</strong></td><td>Mejoras planificadas, correcciones, parches urgentes (<em>hotfix</em>), cambios por nuevas versiones del entorno, actualizaciones de componentes comerciales (COTS).</td><td>La modificación en sí y la regresión de las áreas afectadas.</td></tr>
+  <tr><td><strong>Migración</strong></td><td>Cambio de plataforma o de sistema operativo, paso a la nube, migración de datos desde otro sistema.</td><td>El funcionamiento en el nuevo entorno, los procedimientos de conversión y la integridad de los datos migrados.</td></tr>
+  <tr><td><strong>Retirada</strong></td><td>Fin de vida del sistema o de una de sus versiones.</td><td>Los procesos de archivado y de restauración de los datos, y la migración de los datos que sobreviven al sistema.</td></tr>
+ </table>
+ <h3>El alcance depende del análisis de impacto</h3>
+ <p>El esfuerzo de la prueba de mantenimiento se decide con un <strong>análisis de impacto</strong>: qué partes del sistema toca el cambio y qué otras dependen de ellas. El análisis determina el alcance de la regresión. Cuesta más de lo esperado cuando:</p>
+ <ul>
+  <li>Las <strong>especificaciones están desactualizadas</strong> o no existen.</li>
+  <li>Falta <strong>trazabilidad</strong> entre requisitos, casos de prueba y código.</li>
+  <li>Los casos de prueba <strong>no se han mantenido</strong> y ya no reflejan el sistema.</li>
+  <li>El cambio es muy grande, urgente (un <em>hotfix</em> no deja tiempo para el análisis) o afecta a un sistema con mucha deuda técnica.</li>
+ </ul>
+ <div class="nota">El mantenimiento es el escenario donde la <strong>automatización de la regresión</strong> mejor se rentabiliza: son las mismas pruebas, ejecutadas muchas veces, durante toda la vida del sistema.</div>`}
+ ],
  quiz:[
-  {k:"k2",q:"¿Qué nivel de prueba se concentra en las interfaces y el intercambio de datos entre el sistema sujeto a prueba y otros sistemas o servicios externos?",
+  {id:"q2-1",sec:"2.2",k:"k2",q:"¿Qué nivel de prueba se concentra en las interfaces y el intercambio de datos entre el sistema sujeto a prueba y otros sistemas o servicios externos?",
    op:["Prueba de integración de componentes","Prueba de integración de sistemas","Prueba de componente","Prueba de aceptación de usuario"],
    c:1,e:"La integración de sistemas prueba las interfaces con otros sistemas/servicios externos. La integración de componentes se ocupa de las interfaces entre componentes internos del mismo sistema."},
-  {k:"k2",q:"En el desarrollo guiado por el comportamiento (DGC/BDD), ¿cómo se expresan habitualmente los casos de prueba?",
+  {id:"q2-2",sec:"2.1",k:"k2",q:"En el desarrollo guiado por el comportamiento (DGC/BDD), ¿cómo se expresan habitualmente los casos de prueba?",
    op:["Como diagramas de transición de estado","En lenguaje natural con el formato Dado/Cuando/Entonces, traducible a pruebas ejecutables","Únicamente como código de prueba unitaria escrito por desarrolladores","Como una tabla de decisión de entrada limitada"],
    c:1,e:"El DGC describe el comportamiento esperado en lenguaje natural sencillo (Dado/Cuando/Entonces), comprensible por los implicados y que luego se traduce a pruebas ejecutables."},
-  {k:"k2",q:"¿Qué describe mejor el enfoque de «desplazamiento a la izquierda» (shift-left)?",
+  {id:"q2-3",sec:"2.1",k:"k2",q:"¿Qué describe mejor el enfoque de «desplazamiento a la izquierda» (shift-left)?",
    op:["Posponer la prueba hasta tener el sistema completo para ahorrar esfuerzo","Realizar la prueba lo antes posible en el ciclo de vida, sin descuidar la prueba posterior","Trasladar toda la prueba al equipo de operaciones","Sustituir la prueba dinámica por prueba estática"],
    c:1,e:"Desplazar a la izquierda es aplicar el principio de prueba temprana: empezar a probar (revisiones, casos antes del código, IC, análisis estático) cuanto antes. No significa abandonar la prueba más avanzada."},
-  {k:"k2",q:"Se corrige un defecto en el módulo de facturación. Se vuelve a ejecutar el módulo de informes (que no se tocó) y se descubre que ahora calcula mal un total. ¿Qué tipo de prueba ha detectado este problema?",
+  {id:"q2-4",sec:"2.2",k:"k2",q:"Se corrige un defecto en el módulo de facturación. Se vuelve a ejecutar el módulo de informes (que no se tocó) y se descubre que ahora calcula mal un total. ¿Qué tipo de prueba ha detectado este problema?",
    op:["Prueba de confirmación","Prueba de regresión","Prueba de aceptación","Prueba de humo"],
    c:1,e:"La prueba de regresión busca efectos adversos de un cambio en partes que antes funcionaban. La confirmación, en cambio, comprueba que el defecto original concreto quedó resuelto."},
-  {k:"k2",q:"¿Cuál de los siguientes es un desencadenante típico de la prueba de mantenimiento?",
+  {id:"q2-5",sec:"2.3",k:"k2",q:"¿Cuál de los siguientes es un desencadenante típico de la prueba de mantenimiento?",
    op:["La redacción inicial del plan de prueba del proyecto","La migración del sistema a una nueva plataforma o entorno operativo","La primera definición de las historias de usuario","La planificación de la primera iteración"],
    c:1,e:"Los desencadenantes del mantenimiento son modificaciones (mejoras, correctivos, hotfix), actualizaciones/migraciones de entorno y la retirada del sistema. Las demás opciones son actividades previas a la operación."}
  ]},
 
 {n:3,titulo:"Prueba estática",
- html:`
+ resumen:"Todo lo que se puede evaluar sin ejecutar el software: qué productos son examinables, qué aporta frente a la prueba dinámica, y cómo se organiza una revisión (actividades, roles, tipos y factores de éxito).",
+ secciones:[
+  {id:"3.1",titulo:"Prueba estática · Fundamentos",
+   lo:[{id:"FL-3.1.1",k:"K1",t:"Reconocer los tipos de productos que pueden ser evaluados mediante las diferentes técnicas de prueba estática."},{id:"FL-3.1.2",k:"K2",t:"Explicar el valor de la prueba estática."},{id:"FL-3.1.3",k:"K2",t:"Comparar y contrastar la prueba estática y la prueba dinámica."}],
+   html:`
  <h3>Fundamentos</h3>
  <p>La <strong>prueba estática</strong> no ejecuta el software: evalúa productos de trabajo mediante <strong>revisiones</strong> (examen manual) o <strong>análisis estático</strong> (con herramienta). Sirve tanto para verificación como para validación. El análisis estático detecta defectos en el código (variables no inicializadas, código inalcanzable, desviaciones de estándares, vulnerabilidades) sin casos de prueba y suele integrarse en la IC.</p>
  <h3>Productos examinables y valor</h3>
  <p>Casi cualquier producto de trabajo legible puede revisarse: requisitos, código, planes y casos de prueba, historias de usuario, contratos, modelos. Para el <em>análisis estático</em> se necesita una estructura formal (modelos, código, texto con sintaxis). <strong>Valor:</strong> detecta defectos muy temprano (principio de prueba temprana), encuentra defectos que la prueba dinámica no puede (código inalcanzable, requisitos ambiguos), crea entendimiento compartido entre implicados y reduce el coste total, porque corregir tarde es mucho más caro.</p>
+ <h3>Defectos que la prueba estática detecta mejor</h3>
+ <p>Por su naturaleza temprana y sin ejecución, la estática es especialmente eficaz para encontrar: defectos en <strong>requisitos</strong> (ambigüedades, inconsistencias, contradicciones, omisiones, duplicaciones), defectos de <strong>diseño</strong> (modularidad deficiente, estructuras de datos ineficaces), ciertos defectos de <strong>código</strong> (variables no inicializadas o no declaradas, código inalcanzable o duplicado, complejidad excesiva), <strong>desviaciones de estándares</strong>, <strong>interfaces incorrectas</strong> (número/tipo/orden de parámetros) y algunas <strong>vulnerabilidades de seguridad</strong> (p. ej., desbordamientos de búfer). También detecta lagunas de cobertura en la base de prueba.</p>
+ <h3>El análisis estático con herramientas</h3>
+ <p>El <strong>análisis estático</strong> examina código o modelos sin ejecutarlos, normalmente con herramienta, y suele integrarse en la integración continua. Detecta defectos de forma más eficiente que la prueba dinámica para ciertos patrones de código y evalúa también la <strong>mantenibilidad</strong> y la <strong>seguridad</strong>. Necesita una estructura formal (código, modelos, texto con sintaxis), a diferencia de la revisión, que puede aplicarse a cualquier producto legible.</p>
  <h3>Estática vs dinámica</h3>
  <ul>
   <li>La estática <strong>encuentra los defectos directamente</strong>; la dinámica <strong>provoca fallos</strong> de los que luego se deducen los defectos.</li>
   <li>La estática se aplica a productos <strong>no ejecutables</strong>; la dinámica solo a ejecutables.</li>
   <li>La estática mide cualidades que no dependen de la ejecución (p. ej., mantenibilidad); la dinámica, las que sí (p. ej., rendimiento).</li>
- </ul>
+ </ul>`},
+  {id:"3.2",titulo:"Retroalimentación y proceso de revisión",
+   lo:[{id:"FL-3.2.1",k:"K1",t:"Identificar las ventajas de una retroalimentación temprana y frecuente de los implicados."},{id:"FL-3.2.2",k:"K2",t:"Resumir las actividades del proceso de revisión."},{id:"FL-3.2.3",k:"K1",t:"Recordar qué responsabilidades se asignan a los principales roles a la hora de realizar revisiones."},{id:"FL-3.2.4",k:"K2",t:"Comparar y contrastar los diferentes tipos de revisión."},{id:"FL-3.2.5",k:"K1",t:"Recordar los factores que contribuyen al éxito de una revisión."}],
+   html:`
+ <h3>Beneficios de la retroalimentación temprana y frecuente</h3>
+ <p>La participación temprana de los implicados evita construir el producto equivocado. Una retroalimentación frecuente comunica pronto los problemas de calidad, evita malentendidos sobre los requisitos, asegura que los cambios se entienden e implementan antes, y permite al equipo concentrarse en lo que más valor aporta. Corregir tarde es mucho más caro que prevenir: por eso, aunque las revisiones cuestan esfuerzo, reducen el coste total del proyecto.</p>
  <h3>Actividades del proceso de revisión (ISO/IEC 20246)</h3>
  <ol>
   <li><strong>Planificación:</strong> alcance, propósito, características de calidad, criterios de salida, esfuerzo.</li>
@@ -245,12 +348,6 @@ const CAPS=[
   <tr><td><strong>Técnica</strong></td><td>Revisores técnicamente cualificados, dirigida por un moderador. Busca consenso y decisiones técnicas.</td></tr>
   <tr><td><strong>Inspección</strong></td><td>La más formal: sigue el proceso completo, recopila métricas. Objetivo: máximo nº de anomalías. El autor no puede ser revisor ni escriba.</td></tr>
  </table>
- <h3>Defectos que la prueba estática detecta mejor</h3>
- <p>Por su naturaleza temprana y sin ejecución, la estática es especialmente eficaz para encontrar: defectos en <strong>requisitos</strong> (ambigüedades, inconsistencias, contradicciones, omisiones, duplicaciones), defectos de <strong>diseño</strong> (modularidad deficiente, estructuras de datos ineficaces), ciertos defectos de <strong>código</strong> (variables no inicializadas o no declaradas, código inalcanzable o duplicado, complejidad excesiva), <strong>desviaciones de estándares</strong>, <strong>interfaces incorrectas</strong> (número/tipo/orden de parámetros) y algunas <strong>vulnerabilidades de seguridad</strong> (p. ej., desbordamientos de búfer). También detecta lagunas de cobertura en la base de prueba.</p>
- <h3>Beneficios de la retroalimentación temprana y frecuente</h3>
- <p>La participación temprana de los implicados evita construir el producto equivocado. Una retroalimentación frecuente comunica pronto los problemas de calidad, evita malentendidos sobre los requisitos, asegura que los cambios se entienden e implementan antes, y permite al equipo concentrarse en lo que más valor aporta. Corregir tarde es mucho más caro que prevenir: por eso, aunque las revisiones cuestan esfuerzo, reducen el coste total del proyecto.</p>
- <h3>El análisis estático con herramientas</h3>
- <p>El <strong>análisis estático</strong> examina código o modelos sin ejecutarlos, normalmente con herramienta, y suele integrarse en la integración continua. Detecta defectos de forma más eficiente que la prueba dinámica para ciertos patrones de código y evalúa también la <strong>mantenibilidad</strong> y la <strong>seguridad</strong>. Necesita una estructura formal (código, modelos, texto con sintaxis), a diferencia de la revisión, que puede aplicarse a cualquier producto legible.</p>
  <h3>Comparación de los tipos de revisión</h3>
  <table>
   <tr><th>Tipo</th><th>Dirige</th><th>Formalidad</th><th>Objetivo principal</th></tr>
@@ -260,48 +357,57 @@ const CAPS=[
   <tr><td>Inspección</td><td>Moderador</td><td>Máxima</td><td>Encontrar el máximo de anomalías; recopila métricas</td></tr>
  </table>
  <p>El nivel de formalidad depende del CVDS, la madurez del proceso, la criticidad y complejidad del producto, y los requisitos legales o de auditoría. Un mismo producto puede revisarse con varios tipos (primero informal, luego formal).</p>
- <div class="nota">Factores de éxito: objetivos claros y criterios de salida medibles; <strong>nunca evaluar a las personas</strong>; el tipo de revisión adecuado; revisar en fragmentos pequeños; dar tiempo de preparación; apoyo de la dirección; y formación de los participantes.</div>`,
+ <h3>Factores de éxito de las revisiones</h3>
+ <p>Una revisión mal planteada consume tiempo y no encuentra defectos. El syllabus recoge estos factores de éxito, organizativos y humanos:</p>
+ <ul>
+  <li><strong>Objetivos claros y medibles</strong>, definidos durante la planificación y usados como criterios de salida.</li>
+  <li><strong>El tipo de revisión adecuado</strong> a los objetivos, al producto de trabajo, a las personas y al contexto del proyecto.</li>
+  <li><strong>Revisar en fragmentos pequeños</strong>, para que los revisores mantengan la concentración y la calidad del examen.</li>
+  <li><strong>Dar retroalimentación sobre los defectos de forma constructiva</strong>: se critica el producto, nunca al autor.</li>
+  <li><strong>Tiempo de preparación suficiente</strong> y planificado en el calendario: sin preparación, la reunión se convierte en una lectura improvisada.</li>
+  <li><strong>Apoyo de la dirección</strong>: la revisión debe estar reconocida en el calendario y en el presupuesto del proyecto.</li>
+  <li><strong>Participantes formados</strong>, sobre todo en los tipos de revisión más formales, y revisores con el conocimiento adecuado del dominio.</li>
+  <li><strong>Que la revisión forme parte de la cultura</strong> del equipo, como una vía de aprendizaje y mejora, no como un control.</li>
+ </ul>`}
+ ],
  quiz:[
-  {k:"k2",q:"¿Cuál es una diferencia correcta entre prueba estática y prueba dinámica?",
+  {id:"q3-1",sec:"3.1",k:"k2",q:"¿Cuál es una diferencia correcta entre prueba estática y prueba dinámica?",
    op:["La prueba estática provoca fallos; la dinámica encuentra los defectos directamente","La prueba estática encuentra los defectos directamente; la dinámica provoca fallos de los que se deducen los defectos","La prueba estática solo se aplica a código ejecutable","La prueba dinámica puede aplicarse a productos de trabajo no ejecutables"],
    c:1,e:"La estática localiza el defecto directamente (no ejecuta nada); la dinámica provoca un fallo y de él se deduce el defecto mediante análisis. La estática se aplica también a productos no ejecutables; la dinámica, solo a ejecutables."},
-  {k:"k1",q:"En una inspección, ¿qué restricción se aplica al autor del producto de trabajo?",
+  {id:"q3-2",sec:"3.2",k:"k1",q:"En una inspección, ¿qué restricción se aplica al autor del producto de trabajo?",
    op:["El autor debe actuar como moderador de la reunión","El autor no puede actuar como revisor ni como escriba","El autor debe ser siempre el líder de la revisión","El autor no puede asistir a la reunión de revisión"],
    c:1,e:"La inspección es la revisión más formal; para garantizar objetividad, el autor no puede asumir los roles de revisor ni de escriba."},
-  {k:"k2",q:"¿Cuál de los siguientes es un valor característico de la prueba estática?",
+  {id:"q3-3",sec:"3.1",k:"k2",q:"¿Cuál de los siguientes es un valor característico de la prueba estática?",
    op:["Mide la eficiencia de rendimiento del sistema en ejecución","Detecta defectos muy temprano y permite encontrar defectos que la prueba dinámica no puede (p. ej., requisitos ambiguos o código inalcanzable)","Sustituye por completo a la prueba dinámica","Solo puede aplicarse al código fuente"],
    c:1,e:"La estática detecta defectos en fases tempranas y halla defectos que la dinámica no puede (ambigüedades en requisitos, código inalcanzable). El rendimiento se mide con prueba dinámica, y la estática se aplica a muchos productos, no solo al código."},
-  {k:"k2",q:"Durante la actividad de «comunicación y análisis» de una revisión, ¿qué afirmación es correcta?",
+  {id:"q3-4",sec:"3.2",k:"k2",q:"Durante la actividad de «comunicación y análisis» de una revisión, ¿qué afirmación es correcta?",
    op:["Toda anomalía identificada es, por definición, un defecto","Las anomalías se analizan porque no todas son defectos, y se decide su estado y las acciones requeridas","El autor decide en solitario qué anomalías son válidas","Las anomalías se corrigen sin registrarlas para ahorrar tiempo"],
    c:1,e:"No toda anomalía es un defecto; por eso se analizan y se discuten para decidir su estado, propiedad y acciones. Los defectos confirmados se registran en un informe de defecto."},
-  {k:"k1",q:"¿Cuál de los siguientes es un factor de éxito de las revisiones?",
+  {id:"q3-5",sec:"3.2",k:"k1",q:"¿Cuál de los siguientes es un factor de éxito de las revisiones?",
    op:["Utilizar la revisión para evaluar el desempeño de los participantes","Definir objetivos claros y criterios de salida medibles, sin evaluar nunca a las personas","Revisar el producto de trabajo completo en una única sesión, sea cual sea su tamaño","Prescindir de la preparación previa para acelerar la reunión"],
    c:1,e:"Objetivos claros, criterios de salida medibles y no evaluar nunca a las personas son factores de éxito. Conviene revisar en fragmentos pequeños y dar tiempo de preparación."}
  ]},
 
 {n:4,titulo:"Análisis y diseño de la prueba",
- html:`
+ resumen:"El capítulo con más peso del examen (11 preguntas) y el que concentra los objetivos K3: aquí no basta con describir las técnicas, hay que aplicarlas para obtener casos de prueba.",
+ secciones:[
+  {id:"4.1",titulo:"Introducción a las técnicas de prueba",
+   lo:[{id:"FL-4.1.1",k:"K2",t:"Distinguir entre técnicas de prueba de caja negra, de caja blanca y basadas en la experiencia."}],
+   html:`
  <h3>Familias de técnicas</h3>
  <ul>
   <li><strong>Caja negra</strong> (basadas en la especificación): el comportamiento especificado, sin mirar la estructura interna. Si la implementación cambia pero el comportamiento no, los casos siguen valiendo.</li>
   <li><strong>Caja blanca</strong> (basadas en la estructura): el código/estructura interna. Solo se diseñan tras el diseño o la implementación.</li>
   <li><strong>Basadas en la experiencia:</strong> aprovechan el conocimiento del probador; complementan a las anteriores.</li>
- </ul>
+ </ul>`},
+  {id:"4.2",titulo:"Técnicas de prueba de caja negra",
+   lo:[{id:"FL-4.2.1",k:"K3",t:"Utilizar partición de equivalencia para obtener casos de prueba."},{id:"FL-4.2.2",k:"K3",t:"Utilizar análisis del valor frontera para obtener casos de prueba."},{id:"FL-4.2.3",k:"K3",t:"Utilizar prueba de tabla de decisión para obtener casos de prueba."},{id:"FL-4.2.4",k:"K3",t:"Utilizar prueba de transición de estado para obtener casos de prueba."}],
+   html:`
  <h3>Caja negra</h3>
  <p><strong>Partición de equivalencia (PE):</strong> divide los datos en particiones que se procesan igual; basta una prueba por partición. Hay particiones <strong>válidas</strong> e <strong>inválidas</strong>; no se solapan. Cobertura de «Cada Elección»: usar cada partición al menos una vez.</p>
  <p><strong>Análisis del valor frontera (AVF):</strong> practica las <em>fronteras</em> de las particiones ordenadas, donde son frecuentes los errores. <strong>AVF de 2 valores</strong>: el valor frontera y su vecino de la partición adyacente. <strong>AVF de 3 valores</strong>: el valor frontera y sus <em>dos</em> vecinos (más riguroso; detecta defectos que el de 2 pasa por alto).</p>
  <p><strong>Tabla de decisión:</strong> registra combinaciones de condiciones → acciones (reglas en columnas). Útil para reglas de negocio complejas. Cobertura 100 %: practicar todas las columnas (reglas) factibles.</p>
  <p><strong>Transición de estado:</strong> estados, eventos, transiciones (con condición de guarda y acción). Coberturas: <em>todos los estados</em> (la más débil), <em>transiciones válidas</em> (conmutador 0, la más usada) y <em>todas las transiciones</em> (válidas + intento de las inválidas, mínimo para software crítico). Lograr cobertura de transiciones válidas garantiza la de todos los estados.</p>
- <h3>Caja blanca</h3>
- <p><strong>Cobertura de sentencia:</strong> % de sentencias ejecutables practicadas. <strong>Cobertura de rama:</strong> % de ramas (resultados de decisiones) practicadas. Clave: la <strong>cobertura de rama subsume la de sentencia</strong> — 100 % de rama ⇒ 100 % de sentencia, pero no al revés. Valor de la caja blanca: detecta defectos aunque la especificación sea vaga y aporta una medida objetiva de cobertura del código.</p>
- <h3>Basadas en la experiencia</h3>
- <ul>
-  <li><strong>Predicción de errores:</strong> anticipar dónde fallará el software según experiencia (los «ataques de defecto» la sistematizan con listas).</li>
-  <li><strong>Prueba exploratoria:</strong> diseñar, ejecutar y evaluar a la vez mientras se aprende; a menudo basada en sesiones con un contrato de prueba. Útil con especificaciones escasas o poco tiempo.</li>
-  <li><strong>Basada en lista de comprobación:</strong> cubrir las condiciones de una checklist (formuladas como preguntas), que se actualiza periódicamente.</li>
- </ul>
- <h3>Enfoques basados en la colaboración</h3>
- <p>Buscan <strong>evitar</strong> defectos, no solo detectarlos. <strong>Historias de usuario</strong>: las «3 C» (Cuartilla/Card, Conversación, Confirmación) y el criterio <span class="term">INVEST</span> (Independiente, Negociable, Valiosa, Estimable, Pequeña, Comprobable). Formato: «Como [rol], quiero [objetivo], para [valor]». Los <strong>criterios de aceptación</strong> son las condiciones para aceptar la historia (orientados a escenario <em>Dado/Cuando/Entonces</em> u orientados a reglas). El <strong>DGPA (ATDD)</strong> crea los casos de prueba <em>antes</em> de implementar, en un taller de especificación con varias perspectivas (cliente, desarrollo, prueba).</p>
  <h3>Ejemplo resuelto · Partición de equivalencia + AVF</h3>
  <p>Un descuento depende del importe: <em>&lt; 100 €</em> → 0 %; <em>100–500 €</em> (incluidos) → 10 %; <em>&gt; 500 €</em> → 20 %.</p>
  <ul>
@@ -323,40 +429,66 @@ const CAPS=[
   <li><strong>Todos los estados</strong> (la más débil): visitar cada estado al menos una vez.</li>
   <li><strong>Transiciones válidas / conmutador 0</strong> (la más usada): recorrer cada transición válida; garantiza también todos los estados.</li>
   <li><strong>Todas las transiciones</strong>: válidas + <em>intentar</em> las inválidas (p. ej., insertar una segunda tarjeta estando «Operando»); mínimo para software crítico. Probar las inválidas de una en una evita el enmascaramiento de defectos.</li>
- </ul>
+ </ul>`},
+  {id:"4.3",titulo:"Técnicas de prueba de caja blanca",
+   lo:[{id:"FL-4.3.1",k:"K2",t:"Explicar la prueba de sentencia."},{id:"FL-4.3.2",k:"K2",t:"Explicar la prueba de rama."},{id:"FL-4.3.3",k:"K2",t:"Explicar el valor de la prueba de caja blanca."}],
+   html:`
+ <h3>Caja blanca</h3>
+ <p><strong>Cobertura de sentencia:</strong> % de sentencias ejecutables practicadas. <strong>Cobertura de rama:</strong> % de ramas (resultados de decisiones) practicadas. Clave: la <strong>cobertura de rama subsume la de sentencia</strong> — 100 % de rama ⇒ 100 % de sentencia, pero no al revés. Valor de la caja blanca: detecta defectos aunque la especificación sea vaga y aporta una medida objetiva de cobertura del código.</p>
  <h3>Caja blanca · matices de cobertura</h3>
- <p>Alcanzar el 100 % de <strong>sentencia</strong> no garantiza haber probado toda la lógica de decisión (puede faltar la rama «falsa» de un «if» sin «else»). El 100 % de <strong>rama</strong> sí garantiza el 100 % de sentencia (subsunción). Aun así, ninguna cobertura detecta todos los defectos: una división por cero solo falla con el dato adecuado, y los defectos de omisión (un requisito no implementado) escapan a la caja blanca, porque esta solo «ve» el código que existe.</p>
+ <p>Alcanzar el 100 % de <strong>sentencia</strong> no garantiza haber probado toda la lógica de decisión (puede faltar la rama «falsa» de un «if» sin «else»). El 100 % de <strong>rama</strong> sí garantiza el 100 % de sentencia (subsunción). Aun así, ninguna cobertura detecta todos los defectos: una división por cero solo falla con el dato adecuado, y los defectos de omisión (un requisito no implementado) escapan a la caja blanca, porque esta solo «ve» el código que existe.</p>`},
+  {id:"4.4",titulo:"Técnicas de prueba basadas en la experiencia",
+   lo:[{id:"FL-4.4.1",k:"K2",t:"Explicar la predicción de errores."},{id:"FL-4.4.2",k:"K2",t:"Explicar la prueba exploratoria."},{id:"FL-4.4.3",k:"K2",t:"Explicar la prueba basada en lista de comprobación."}],
+   html:`
+ <h3>Basadas en la experiencia</h3>
+ <ul>
+  <li><strong>Predicción de errores:</strong> anticipar dónde fallará el software según experiencia (los «ataques de defecto» la sistematizan con listas).</li>
+  <li><strong>Prueba exploratoria:</strong> diseñar, ejecutar y evaluar a la vez mientras se aprende; a menudo basada en sesiones con un contrato de prueba. Útil con especificaciones escasas o poco tiempo.</li>
+  <li><strong>Basada en lista de comprobación:</strong> cubrir las condiciones de una checklist (formuladas como preguntas), que se actualiza periódicamente.</li>
+ </ul>
  <h3>Técnicas basadas en la experiencia · detalle</h3>
  <ul>
   <li><strong>Predicción de errores:</strong> anticipa fallos típicos relacionados con entrada, salida, lógica, cálculo, interfaces o datos. Los <em>ataques de defecto</em> la sistematizan partiendo de listas de errores conocidos.</li>
   <li><strong>Prueba exploratoria basada en sesiones:</strong> se trabaja en un marco temporal acotado con un <em>contrato de prueba</em> (objetivos), y se cierra con una recapitulación (debrief). Útil con especificaciones escasas o poco tiempo; su eficacia depende de la experiencia del probador.</li>
   <li><strong>Lista de comprobación:</strong> condiciones formuladas como preguntas comprobables; se actualiza con el análisis de defectos y se evita que crezca en exceso o sea demasiado genérica.</li>
- </ul>
+ </ul>`},
+  {id:"4.5",titulo:"Enfoques de prueba basados en la colaboración",
+   lo:[{id:"FL-4.5.1",k:"K2",t:"Explicar cómo escribir historias de usuario en colaboración con desarrolladores y representantes de negocio."},{id:"FL-4.5.2",k:"K2",t:"Clasificar las diferentes opciones para escribir criterios de aceptación."},{id:"FL-4.5.3",k:"K3",t:"Utilizar el desarrollo guiado por prueba de aceptación (DGPA) para obtener casos de prueba."}],
+   html:`
+ <h3>Enfoques basados en la colaboración</h3>
+ <p>Buscan <strong>evitar</strong> defectos, no solo detectarlos. <strong>Historias de usuario</strong>: las «3 C» (Cuartilla/Card, Conversación, Confirmación) y el criterio <span class="term">INVEST</span> (Independiente, Negociable, Valiosa, Estimable, Pequeña, Comprobable). Formato: «Como [rol], quiero [objetivo], para [valor]». Los <strong>criterios de aceptación</strong> son las condiciones para aceptar la historia (orientados a escenario <em>Dado/Cuando/Entonces</em> u orientados a reglas). El <strong>DGPA (ATDD)</strong> crea los casos de prueba <em>antes</em> de implementar, en un taller de especificación con varias perspectivas (cliente, desarrollo, prueba).</p>
  <h3>Colaboración · historias de usuario y DGPA</h3>
  <p>Las <strong>3 C</strong>: <em>Cuartilla</em> (la ficha que la describe), <em>Conversación</em> (cómo se usará) y <em>Confirmación</em> (los criterios de aceptación). Criterio <span class="term">INVEST</span>: Independiente, Negociable, Valiosa, Estimable, Pequeña, Comprobable. Los <strong>criterios de aceptación</strong> se redactan orientados a escenario (<em>Dado/Cuando/Entonces</em>) o a reglas. En el <strong>DGPA (ATDD)</strong>: (1) taller de especificación donde el equipo aclara la historia y sus criterios; (2) se crean los casos de prueba <em>antes</em> de implementar (primero positivos, luego negativos, luego no funcionales); (3) al automatizarse, los criterios se vuelven «requisitos ejecutables».</p>
- <div class="nota">El capítulo 4 es el de más peso (11 preguntas) y exige <strong>aplicar</strong> (K3): te darán un caso concreto y tendrás que obtener los casos de prueba o calcular la cobertura. Practica a mano partición de equivalencia, AVF, tablas de decisión y transición de estado.</div>`,
+ <div class="nota">El capítulo 4 es el de más peso (11 preguntas) y exige <strong>aplicar</strong> (K3): te darán un caso concreto y tendrás que obtener los casos de prueba o calcular la cobertura. Practica a mano partición de equivalencia, AVF, tablas de decisión y transición de estado.</div>`}
+ ],
  quiz:[
-  {k:"k3",q:"Un campo acepta una edad entera de 18 a 65 (ambos incluidos); fuera de ese rango se rechaza. Usando partición de equivalencia, ¿cuál es un conjunto correcto de particiones a cubrir?",
+  {id:"q4-1",sec:"4.2",k:"k3",q:"Un campo acepta una edad entera de 18 a 65 (ambos incluidos); fuera de ese rango se rechaza. Usando partición de equivalencia, ¿cuál es un conjunto correcto de particiones a cubrir?",
    op:["Una sola partición: 18–65","Tres particiones: <18 (inválida), 18–65 (válida) y >65 (inválida)","Dos particiones: pares e impares","Cuatro particiones: 18, 65 y los dos vecinos"],
    c:1,e:"Hay una partición válida (18–65) y dos inválidas (menor que 18 y mayor que 65). Basta una prueba por partición. Los valores 18 y 65 son fronteras que cubriría el AVF, no la partición de equivalencia por sí sola."},
-  {k:"k3",q:"Para el mismo rango válido de 18 a 65, aplicando AVF de 2 valores sobre la frontera inferior, ¿qué valores deberías probar?",
+  {id:"q4-2",sec:"4.2",k:"k3",q:"Para el mismo rango válido de 18 a 65, aplicando AVF de 2 valores sobre la frontera inferior, ¿qué valores deberías probar?",
    op:["17 y 18","18 y 19","17, 18 y 19","Solo 18"],
    c:0,e:"En AVF de 2 valores cada frontera tiene dos elementos de cobertura: el valor frontera (18) y su vecino más cercano de la partición adyacente (17). El AVF de 3 valores añadiría además el 19."},
-  {k:"k2",q:"¿Qué relación de subsunción existe entre la cobertura de sentencia y la de rama?",
+  {id:"q4-3",sec:"4.3",k:"k2",q:"¿Qué relación de subsunción existe entre la cobertura de sentencia y la de rama?",
    op:["La cobertura de sentencia subsume la de rama: 100 % de sentencia implica 100 % de rama","La cobertura de rama subsume la de sentencia: 100 % de rama implica 100 % de sentencia, pero no al revés","Son equivalentes: 100 % de una implica siempre 100 % de la otra","No tienen ninguna relación entre sí"],
    c:1,e:"La cobertura de rama subsume la de sentencia: alcanzar el 100 % de ramas garantiza el 100 % de sentencias, pero el 100 % de sentencias no garantiza el 100 % de ramas (p. ej., un «if» sin «else»)."},
-  {k:"k2",q:"En la prueba de transición de estado, ¿qué afirmación sobre los criterios de cobertura es correcta?",
+  {id:"q4-4",sec:"4.2",k:"k2",q:"En la prueba de transición de estado, ¿qué afirmación sobre los criterios de cobertura es correcta?",
    op:["La cobertura de todos los estados es más fuerte que la de transiciones válidas","Lograr el 100 % de cobertura de transiciones válidas garantiza el 100 % de cobertura de todos los estados","La cobertura de todas las transiciones ignora las transiciones inválidas","La cobertura de transiciones válidas es la más débil de las tres"],
    c:1,e:"Cubrir todas las transiciones válidas obliga a pasar por todos los estados, así que garantiza la cobertura de todos los estados (no a la inversa). La cobertura de todos los estados es la más débil; la de todas las transiciones incluye intentar las inválidas."},
-  {k:"k2",q:"¿Cuál es una característica distintiva de la prueba exploratoria?",
+  {id:"q4-5",sec:"4.4",k:"k2",q:"¿Cuál es una característica distintiva de la prueba exploratoria?",
    op:["Las pruebas se especifican por completo y se documentan antes de ejecutarlas","El diseño, la ejecución y la evaluación de las pruebas ocurren de forma simultánea mientras el probador aprende sobre el objeto de prueba","Solo puede aplicarse cuando la especificación es completa y estable","Excluye el uso de cualquier otra técnica de prueba"],
    c:1,e:"En la prueba exploratoria se diseña, ejecuta y evalúa a la vez, aprendiendo del objeto de prueba; es especialmente útil con especificaciones escasas o poco tiempo, y puede apoyarse en otras técnicas (p. ej., partición de equivalencia)."}
  ]},
 
 {n:5,titulo:"Gestión de las actividades de prueba",
- html:`
+ resumen:"La cara de gestión de la prueba: planificar y estimar, priorizar por riesgo, monitorizar y comunicar el avance, versionar el producto de prueba y gestionar los defectos que se encuentran.",
+ secciones:[
+  {id:"5.1",titulo:"Planificación de la prueba",
+   lo:[{id:"FL-5.1.1",k:"K2",t:"Dar ejemplos del propósito y el contenido de un plan de prueba."},{id:"FL-5.1.2",k:"K1",t:"Reconocer cómo un probador añade valor a la planificación de la iteración y de la entrega."},{id:"FL-5.1.3",k:"K2",t:"Comparar y contrastar los criterios de entrada y los criterios de salida."},{id:"FL-5.1.4",k:"K3",t:"Utilizar técnicas de estimación para calcular el esfuerzo de prueba necesario."},{id:"FL-5.1.5",k:"K3",t:"Aplicar la priorización de casos de prueba."},{id:"FL-5.1.6",k:"K1",t:"Recordar los conceptos de la pirámide de prueba."},{id:"FL-5.1.7",k:"K2",t:"Resumir los cuadrantes de prueba y sus relaciones con los niveles y los tipos de prueba."}],
+   html:`
  <h3>Plan de prueba y criterios de entrada/salida</h3>
  <p>El <strong>plan de prueba</strong> describe objetivos, recursos y procesos del proyecto de prueba, y sirve de comunicación con los implicados. Los <strong>criterios de entrada</strong> son las precondiciones para empezar una actividad (recursos, material de prueba, calidad inicial); los <strong>criterios de salida</strong>, lo que debe lograrse para darla por terminada (cobertura, defectos sin resolver, pruebas ejecutadas). En Ágil: <strong>Definición de Preparado</strong> (DoR = entrada) y <strong>Definición de Hecho</strong> (DoD = salida). Quedarse sin tiempo/presupuesto puede ser un criterio de salida válido si los implicados aceptan el riesgo.</p>
+ <h3>Contenido típico de un plan de prueba</h3>
+ <p>Contexto y alcance, objetivos de prueba, base de prueba, riesgos, supuestos y restricciones, implicados y sus roles, enfoque de prueba (niveles, tipos, técnicas, criterios de entrada/salida), entregables, calendario, recursos y entorno. Elaborar el plan obliga al equipo a anticipar retos (riesgos, plazos, herramientas, costes) antes de que ocurran.</p>
  <h3>Técnicas de estimación</h3>
  <ul>
   <li><strong>Basada en proporciones</strong> (ratios de proyectos previos).</li>
@@ -366,23 +498,18 @@ const CAPS=[
  </ul>
  <h3>Priorización, pirámide y cuadrantes</h3>
  <p>Priorización por <strong>riesgo</strong>, por <strong>cobertura</strong> o por <strong>requisitos</strong> (con cuidado de las dependencias entre casos). La <strong>pirámide de prueba</strong>: muchas pruebas pequeñas, aisladas y rápidas en la base (unitarias) y pocas de extremo a extremo, lentas y de gran alcance arriba. Los <strong>cuadrantes de prueba</strong> (Marick) cruzan «orientado a negocio/tecnología» con «apoya al equipo/critica el producto»: Q1 técnico-apoyo (componente/integración, automatizado), Q2 negocio-apoyo (funcional, aceptación), Q3 negocio-crítica (exploratoria, usabilidad, PAU; manual), Q4 técnico-crítica (no funcional, humo; automatizado).</p>
- <h3>Gestión del riesgo</h3>
- <p><strong>Nivel de riesgo = probabilidad × impacto.</strong> Dos tipos: <strong>riesgo de proyecto</strong> (gestión: plazos, personas, proveedores, organización) y <strong>riesgo de producto</strong> (calidad: funcionalidad incorrecta, mal rendimiento, vulnerabilidades). Las <strong>pruebas basadas en el riesgo</strong> concentran el esfuerzo según el análisis del riesgo: a mayor riesgo de producto, mayor minuciosidad y alcance. El <strong>control del riesgo</strong> incluye mitigación (p. ej., probar) y monitorización; otras respuestas: aceptarlo, transferirlo o un plan de contingencia.</p>
- <h3>Monitorización, control y compleción</h3>
- <p>La <strong>monitorización</strong> recopila información del avance; el <strong>control</strong> toma acciones correctivas (repriorizar, ajustar el calendario, añadir recursos); la <strong>compleción</strong> consolida la experiencia en hitos. <strong>Métricas</strong>: de avance del proyecto/prueba, de calidad del producto, de defectos, de riesgo, de cobertura y de coste.</p>
- <h3>Informes y comunicación</h3>
- <p>El <strong>informe de avance</strong> de la prueba es frecuente e informal (mantiene informados durante la prueba); el <strong>informe de compleción</strong> resume una etapa terminada (sigue una plantilla, se hace una vez). Distintas audiencias necesitan distinta información, formalidad y frecuencia.</p>
- <h3>Gestión de la configuración e informe de defecto</h3>
- <p>La <strong>gestión de la configuración</strong> identifica, controla y versiona los productos de prueba; una vez aprobado, un elemento es una <strong>línea base</strong> y solo cambia con control de cambios, lo que permite reproducir resultados. Un buen <strong>informe de defecto</strong> incluye: identificador único, título, fecha/autor/rol, objeto y entorno de prueba, contexto, descripción reproducible (pasos, logs, capturas), resultados esperado y real, <strong>severidad</strong> (impacto), <strong>prioridad</strong> (urgencia de corrección), estado y referencias.</p>
- <h3>Contenido típico de un plan de prueba</h3>
- <p>Contexto y alcance, objetivos de prueba, base de prueba, riesgos, supuestos y restricciones, implicados y sus roles, enfoque de prueba (niveles, tipos, técnicas, criterios de entrada/salida), entregables, calendario, recursos y entorno. Elaborar el plan obliga al equipo a anticipar retos (riesgos, plazos, herramientas, costes) antes de que ocurran.</p>
  <h3>Los cuatro cuadrantes de prueba (Marick)</h3>
  <table>
   <tr><th></th><th>Apoya al equipo</th><th>Critica el producto</th></tr>
   <tr><td><strong>Tecnología</strong></td><td>Q1: componente e integración (automatizado, IC)</td><td>Q4: no funcional y humo (suele automatizarse)</td></tr>
   <tr><td><strong>Negocio</strong></td><td>Q2: funcional, ejemplos, historias, API (manual o automatizado)</td><td>Q3: exploratoria, usabilidad, PAU (suele ser manual)</td></tr>
  </table>
- <p>El modelo ayuda a la gestión de prueba a visualizar que distintos tipos y niveles tienen distinta relevancia y a no olvidar ninguno.</p>
+ <p>El modelo ayuda a la gestión de prueba a visualizar que distintos tipos y niveles tienen distinta relevancia y a no olvidar ninguno.</p>`},
+  {id:"5.2",titulo:"Gestión del riesgo",
+   lo:[{id:"FL-5.2.1",k:"K1",t:"Identificar el nivel de riesgo utilizando la probabilidad y el impacto del riesgo."},{id:"FL-5.2.2",k:"K2",t:"Distinguir entre riesgos de proyecto y riesgos de producto."},{id:"FL-5.2.3",k:"K2",t:"Explicar cómo el análisis del riesgo de producto puede influir en la minuciosidad y el alcance de las pruebas."},{id:"FL-5.2.4",k:"K2",t:"Explicar qué medidas pueden tomarse en respuesta a los riesgos de producto analizados."}],
+   html:`
+ <h3>Gestión del riesgo</h3>
+ <p><strong>Nivel de riesgo = probabilidad × impacto.</strong> Dos tipos: <strong>riesgo de proyecto</strong> (gestión: plazos, personas, proveedores, organización) y <strong>riesgo de producto</strong> (calidad: funcionalidad incorrecta, mal rendimiento, vulnerabilidades). Las <strong>pruebas basadas en el riesgo</strong> concentran el esfuerzo según el análisis del riesgo: a mayor riesgo de producto, mayor minuciosidad y alcance. El <strong>control del riesgo</strong> incluye mitigación (p. ej., probar) y monitorización; otras respuestas: aceptarlo, transferirlo o un plan de contingencia.</p>
  <h3>El ciclo de gestión del riesgo</h3>
  <p>Se compone de <strong>análisis del riesgo</strong> (identificación + evaluación) y <strong>control del riesgo</strong> (mitigación + monitorización):</p>
  <ul>
@@ -390,32 +517,50 @@ const CAPS=[
   <li><strong>Evaluación:</strong> categorizar, estimar probabilidad e impacto, calcular el nivel de riesgo (cuantitativo = probabilidad × impacto; cualitativo = matriz de riesgo) y priorizar.</li>
   <li><strong>Control:</strong> mitigar (a menudo <em>probando</em> más donde más riesgo hay), monitorizar la eficacia y detectar riesgos emergentes. Otras respuestas posibles: aceptar el riesgo, transferirlo o preparar un plan de contingencia.</li>
  </ul>
- <p>En las <strong>pruebas basadas en el riesgo</strong>, el análisis determina el alcance, los niveles y tipos, las técnicas y la cobertura, la estimación del esfuerzo y la prioridad de ejecución, buscando reducir el <em>riesgo residual</em>.</p>
+ <p>En las <strong>pruebas basadas en el riesgo</strong>, el análisis determina el alcance, los niveles y tipos, las técnicas y la cobertura, la estimación del esfuerzo y la prioridad de ejecución, buscando reducir el <em>riesgo residual</em>.</p>`},
+  {id:"5.3",titulo:"Monitorización, control y compleción de la prueba",
+   lo:[{id:"FL-5.3.1",k:"K1",t:"Recordar las métricas utilizadas para probar."},{id:"FL-5.3.2",k:"K2",t:"Resumir los propósitos, el contenido y las audiencias de los informes de prueba."},{id:"FL-5.3.3",k:"K2",t:"Dar ejemplos de cómo comunicar el estado de la prueba."}],
+   html:`
+ <h3>Monitorización, control y compleción</h3>
+ <p>La <strong>monitorización</strong> recopila información del avance; el <strong>control</strong> toma acciones correctivas (repriorizar, ajustar el calendario, añadir recursos); la <strong>compleción</strong> consolida la experiencia en hitos. <strong>Métricas</strong>: de avance del proyecto/prueba, de calidad del producto, de defectos, de riesgo, de cobertura y de coste.</p>
+ <h3>Informes y comunicación</h3>
+ <p>El <strong>informe de avance</strong> de la prueba es frecuente e informal (mantiene informados durante la prueba); el <strong>informe de compleción</strong> resume una etapa terminada (sigue una plantilla, se hace una vez). Distintas audiencias necesitan distinta información, formalidad y frecuencia.</p>`},
+  {id:"5.4",titulo:"Gestión de la configuración",
+   lo:[{id:"FL-5.4.1",k:"K2",t:"Resumir cómo la gestión de la configuración apoya la prueba."}],
+   html:`
+ <h3>Gestión de la configuración y líneas base</h3>
+ <p>La gestión de la configuración identifica, controla y versiona los productos de prueba (planes, casos, guiones, resultados, entornos). Cuando un elemento se aprueba, se convierte en <strong>línea base</strong> y solo cambia mediante control de cambios; siempre es posible volver a una línea base anterior para <em>reproducir</em> resultados. En DevOps suele automatizarse dentro de la canalización.</p>`},
+  {id:"5.5",titulo:"Gestión de defectos",
+   lo:[{id:"FL-5.5.1",k:"K3",t:"Preparar un informe de defecto."}],
+   html:`
  <h3>Contenido de un buen informe de defecto</h3>
  <p>Identificador único; título resumen; fecha, autor y rol; identificación del objeto y el entorno de prueba; contexto (caso de prueba, fase del CVDS, datos); descripción reproducible (pasos, registros, capturas); resultado esperado y resultado real; <strong>severidad</strong> (impacto) y <strong>prioridad</strong> (urgencia); estado (abierto, aplazado, duplicado, en espera de corrección/confirmación, reabierto, cerrado, rechazado); y referencias. Objetivos: dar información suficiente para resolver, permitir el seguimiento de la calidad y aportar ideas para mejorar el proceso.</p>
- <h3>Gestión de la configuración y líneas base</h3>
- <p>La gestión de la configuración identifica, controla y versiona los productos de prueba (planes, casos, guiones, resultados, entornos). Cuando un elemento se aprueba, se convierte en <strong>línea base</strong> y solo cambia mediante control de cambios; siempre es posible volver a una línea base anterior para <em>reproducir</em> resultados. En DevOps suele automatizarse dentro de la canalización.</p>
- <div class="nota">No confundas <strong>severidad</strong> (gravedad del impacto del defecto) con <strong>prioridad</strong> (cuán urgente es corregirlo): un defecto puede ser grave pero de baja prioridad, o leve pero urgente.</div>`,
+ <div class="nota">No confundas <strong>severidad</strong> (gravedad del impacto del defecto) con <strong>prioridad</strong> (cuán urgente es corregirlo): un defecto puede ser grave pero de baja prioridad, o leve pero urgente.</div>`}
+ ],
  quiz:[
-  {k:"k2",q:"¿Cuál es la diferencia entre la severidad y la prioridad de un defecto?",
+  {id:"q5-1",sec:"5.5",k:"k2",q:"¿Cuál es la diferencia entre la severidad y la prioridad de un defecto?",
    op:["Son sinónimos: ambas miden la gravedad del impacto","La severidad mide el grado de impacto del defecto; la prioridad indica la urgencia de su corrección","La severidad indica la urgencia; la prioridad mide el impacto","La prioridad solo la asignan herramientas automáticas y la severidad las personas"],
    c:1,e:"La severidad es el grado de impacto del defecto; la prioridad es la urgencia de corregirlo. Pueden no coincidir: un defecto grave puede tener baja prioridad y uno leve, alta."},
-  {k:"k2",q:"¿Qué distingue un riesgo de proyecto de un riesgo de producto?",
+  {id:"q5-2",sec:"5.2",k:"k2",q:"¿Qué distingue un riesgo de proyecto de un riesgo de producto?",
    op:["El riesgo de proyecto afecta a las características de calidad del producto; el de producto, a los plazos","El riesgo de proyecto afecta a la gestión y control del proyecto (plazos, personas, proveedores); el de producto, a la calidad del producto (funcionalidad, rendimiento, seguridad)","Ambos son lo mismo con distinto nombre","El riesgo de producto solo existe en proyectos ágiles"],
    c:1,e:"Los riesgos de proyecto afectan a la gestión (calendario, presupuesto, personas, proveedores). Los de producto afectan a las características de calidad del software (p. ej., funcionalidad incorrecta, mal rendimiento, vulnerabilidades)."},
-  {k:"k3",q:"Las estimaciones de tres puntos de una tarea son: optimista a=6, más probable m=9 y pesimista b=18 horas-persona. ¿Cuál es la estimación final E?",
+  {id:"q5-3",sec:"5.1",k:"k3",q:"Las estimaciones de tres puntos de una tarea son: optimista a=6, más probable m=9 y pesimista b=18 horas-persona. ¿Cuál es la estimación final E?",
    op:["11 horas-persona","9 horas-persona","10 horas-persona","12 horas-persona"],
    c:2,e:"Con la fórmula E = (a + 4m + b) / 6 = (6 + 36 + 18) / 6 = 60 / 6 = 10 horas-persona. La desviación sería SD = (b − a) / 6 = 2."},
-  {k:"k1",q:"¿Cómo se determina el nivel de riesgo?",
+  {id:"q5-4",sec:"5.2",k:"k1",q:"¿Cómo se determina el nivel de riesgo?",
    op:["Sumando la probabilidad y el impacto del riesgo","Como el producto (combinación) de la probabilidad del riesgo y su impacto","Únicamente por la probabilidad de que ocurra","Únicamente por el coste de mitigarlo"],
    c:1,e:"El nivel de riesgo combina dos factores: la probabilidad de que ocurra y el impacto (daño) si ocurre. A mayor nivel de riesgo, más importante es tratarlo."},
-  {k:"k2",q:"Según el modelo de la pirámide de prueba, ¿qué caracteriza a las pruebas de la capa inferior frente a las de la superior?",
+  {id:"q5-5",sec:"5.1",k:"k2",q:"Según el modelo de la pirámide de prueba, ¿qué caracteriza a las pruebas de la capa inferior frente a las de la superior?",
    op:["Son pruebas de extremo a extremo, lentas y de gran alcance, y se necesitan pocas","Son pequeñas, aisladas y rápidas, comprueban poca funcionalidad y se necesitan muchas","Son siempre manuales y orientadas al usuario final","Tienen menor granularidad que las de la capa superior"],
    c:1,e:"En la base hay muchas pruebas pequeñas, aisladas y rápidas (mayor granularidad); en la cima, pocas pruebas de extremo a extremo, lentas y de gran alcance. La pirámide guía la asignación del esfuerzo de automatización."}
  ]},
 
 {n:6,titulo:"Herramientas de prueba",
- html:`
+ resumen:"El capítulo más corto del examen (2 preguntas): qué tipos de herramientas existen y qué gana y qué arriesga un equipo al automatizar.",
+ secciones:[
+  {id:"6.1",titulo:"Herramientas de apoyo a la prueba",
+   lo:[{id:"FL-6.1.1",k:"K2",t:"Explicar cómo los distintos tipos de herramientas de prueba dan soporte a la prueba."}],
+   html:`
  <h3>Tipos de herramientas de apoyo a la prueba</h3>
  <p>Las herramientas dan soporte a muchas actividades, no solo a la ejecución:</p>
  <ul>
@@ -427,6 +572,11 @@ const CAPS=[
   <li><strong>DevOps:</strong> canalización de entrega, construcción automatizada, IC/EC.</li>
   <li><strong>Colaboración</strong> y herramientas de <strong>escalabilidad/despliegue</strong> (máquinas virtuales, contenedores). Incluso una hoja de cálculo puede ser una herramienta de prueba en su contexto.</li>
  </ul>
+ <h3>Cómo encaja cada herramienta en el proceso</h3>
+ <p>Las herramientas dan soporte a actividades muy distintas, no solo a la ejecución: las de <strong>gestión</strong> trazan requisitos, casos, defectos y configuración a lo largo del CVDS; las de <strong>prueba estática</strong> detectan defectos en revisiones y análisis del código sin ejecutarlo; las de <strong>diseño/implementación</strong> ayudan a generar casos y datos; las de <strong>ejecución y cobertura</strong> automatizan la prueba dinámica y miden cuánto código se ejercita; las <strong>no funcionales</strong> permiten pruebas (carga, rendimiento) inviables a mano; y las de <strong>DevOps</strong>, <strong>colaboración</strong> y <strong>contenedores/virtualización</strong> sostienen la canalización y los entornos. Hasta una hoja de cálculo cuenta como herramienta de prueba en su contexto.</p>`},
+  {id:"6.2",titulo:"Ventajas y riesgos de la automatización de la prueba",
+   lo:[{id:"FL-6.2.1",k:"K1",t:"Recordar las ventajas y los riesgos de la automatización de la prueba."}],
+   html:`
  <h3>Ventajas de la automatización de la prueba</h3>
  <ul>
   <li>Ahorro de tiempo en trabajo manual repetitivo (regresión, datos, comparaciones).</li>
@@ -438,25 +588,24 @@ const CAPS=[
  </ul>
  <h3>Riesgos de la automatización de la prueba</h3>
  <p>Comprar una herramienta <strong>no garantiza el éxito</strong>: cada herramienta exige esfuerzo de introducción, mantenimiento y formación. Riesgos típicos: expectativas poco realistas, subestimar el coste de <strong>mantener</strong> el testware y los scripts, dependencia excesiva de la herramienta, descuidar la <strong>gestión de configuración</strong> de los artefactos de prueba, o automatizar pruebas que aportan poco valor. La herramienta debe encajar con el contexto del equipo y del SUT.</p>
- <h3>Cómo encaja cada herramienta en el proceso</h3>
- <p>Las herramientas dan soporte a actividades muy distintas, no solo a la ejecución: las de <strong>gestión</strong> trazan requisitos, casos, defectos y configuración a lo largo del CVDS; las de <strong>prueba estática</strong> detectan defectos en revisiones y análisis del código sin ejecutarlo; las de <strong>diseño/implementación</strong> ayudan a generar casos y datos; las de <strong>ejecución y cobertura</strong> automatizan la prueba dinámica y miden cuánto código se ejercita; las <strong>no funcionales</strong> permiten pruebas (carga, rendimiento) inviables a mano; y las de <strong>DevOps</strong>, <strong>colaboración</strong> y <strong>contenedores/virtualización</strong> sostienen la canalización y los entornos. Hasta una hoja de cálculo cuenta como herramienta de prueba en su contexto.</p>
  <h3>Equilibrio entre beneficios y riesgos</h3>
  <p>El valor real de una herramienta no llega con la compra: depende de introducirla bien, mantenerla y formar al equipo. Los <strong>riesgos</strong> más habituales son las expectativas poco realistas, subestimar el coste de mantener scripts y testware, depender en exceso de la herramienta, descuidar la gestión de configuración de los artefactos de prueba y automatizar pruebas de poco valor. Una herramienta debe elegirse por su <strong>encaje con el contexto</strong> (tecnología del sistema, competencias del equipo, integración con CI/CD y coste total), no por su precio o popularidad.</p>
- <div class="nota">Idea de examen: la automatización <em>complementa</em> a las personas y a la prueba manual; no las sustituye. La prueba manual —sobre todo desde la perspectiva del usuario— sigue siendo necesaria.</div>`,
+ <div class="nota">Idea de examen: la automatización <em>complementa</em> a las personas y a la prueba manual; no las sustituye. La prueba manual —sobre todo desde la perspectiva del usuario— sigue siendo necesaria.</div>`}
+ ],
  quiz:[
-  {k:"k2",q:"¿Cuál de los siguientes es un beneficio característico de la automatización de la prueba?",
+  {id:"q6-1",sec:"6.2",k:"k2",q:"¿Cuál de los siguientes es un beneficio característico de la automatización de la prueba?",
    op:["Garantiza que el software no tendrá defectos","Mejora la consistencia y repetibilidad, evitando errores humanos en tareas repetitivas","Elimina por completo la necesidad de prueba manual","Reduce a cero el esfuerzo de mantenimiento del testware"],
    c:1,e:"La automatización aporta consistencia y repetibilidad y reduce errores humanos en tareas repetitivas. No garantiza ausencia de defectos, no sustituye a la prueba manual y el mantenimiento del testware es justamente uno de sus costes."},
-  {k:"k1",q:"¿Cuál es un riesgo real asociado a la introducción de una herramienta de automatización de la prueba?",
+  {id:"q6-2",sec:"6.2",k:"k1",q:"¿Cuál es un riesgo real asociado a la introducción de una herramienta de automatización de la prueba?",
    op:["Que la ejecución de pruebas se vuelva más lenta que a mano en todos los casos","Subestimar el esfuerzo continuo de mantenimiento del testware y de la propia herramienta","Que sea imposible obtener métricas de cobertura","Que impida ejecutar pruebas en integración continua"],
    c:1,e:"Adquirir la herramienta no basta: requiere esfuerzo de introducción, formación y, sobre todo, mantenimiento continuo del testware, que suele subestimarse. Las otras opciones describen lo contrario de la realidad."},
-  {k:"k2",q:"¿Qué tipo de herramienta de prueba facilita las revisiones y el análisis estático del código?",
+  {id:"q6-3",sec:"6.1",k:"k2",q:"¿Qué tipo de herramienta de prueba facilita las revisiones y el análisis estático del código?",
    op:["Herramientas de ejecución de prueba y cobertura","Herramientas de prueba estática","Herramientas de prueba no funcional","Herramientas de colaboración"],
    c:1,e:"Las herramientas de prueba estática apoyan revisiones y análisis estático (p. ej., detectar variables no inicializadas o desviaciones de estándares). Las de ejecución/cobertura sirven para la prueba dinámica."},
-  {k:"k2",q:"Tras automatizar la regresión, ¿qué afirmación refleja correctamente el papel de la prueba manual?",
+  {id:"q6-4",sec:"6.2",k:"k2",q:"Tras automatizar la regresión, ¿qué afirmación refleja correctamente el papel de la prueba manual?",
    op:["La prueba manual deja de ser necesaria por completo","La prueba manual, especialmente desde la perspectiva del usuario, sigue siendo necesaria","La automatización solo es válida si elimina toda prueba manual","La prueba manual solo se usa si falla la herramienta"],
    c:1,e:"La automatización complementa, no sustituye: la prueba manual —sobre todo la exploratoria y la centrada en la experiencia de usuario— sigue siendo necesaria junto a la automatizada."},
-  {k:"k2",q:"Al seleccionar una herramienta de prueba, ¿qué criterio es más relevante?",
+  {id:"q6-5",sec:"6.1",k:"k2",q:"Al seleccionar una herramienta de prueba, ¿qué criterio es más relevante?",
    op:["Que sea la herramienta más cara del mercado","Que encaje con el contexto del equipo y la tecnología del sistema sujeto a prueba","Que prometa cero defectos","Que no necesite ninguna formación"],
    c:1,e:"La idoneidad depende del encaje con el contexto: tecnología del SUT, competencias del equipo, integración (CI/CD) y coste total. El precio alto no es señal de adecuación, y toda herramienta exige algo de formación."}
  ]}
@@ -469,129 +618,129 @@ const CAPS=[
 ========================================================= */
 const EXAMEN=[
  // ---- Capítulo 1 (8) ----
- {cap:1,k:"k1",q:"¿Cuál de los siguientes es un objetivo característico de la prueba?",
+ {id:"s1-01",cap:1,sec:"1.1",k:"k1",q:"¿Cuál de los siguientes es un objetivo característico de la prueba?",
   op:["Demostrar que el objeto de prueba no contiene ningún defecto","Reducir el nivel de riesgo asociado a una calidad inadecuada del software","Corregir los defectos encontrados en el código","Garantizar el éxito comercial del producto"],
   c:1,e:"Reducir el nivel de riesgo es un objetivo de la prueba. Demostrar ausencia de defectos es imposible (principio 1); corregir defectos es depuración; y el éxito comercial depende de muchos factores ajenos a la prueba (falacia de la ausencia de defectos)."},
- {cap:1,k:"k2",q:"¿Cuál de las siguientes parejas asocia correctamente la actividad con su naturaleza?",
+ {id:"s1-02",cap:1,sec:"1.1",k:"k2",q:"¿Cuál de las siguientes parejas asocia correctamente la actividad con su naturaleza?",
   op:["Probar = encontrar y eliminar la causa del fallo; depurar = provocar fallos","Probar = provocar fallos o encontrar defectos; depurar = localizar y corregir la causa del fallo","Ambas son la misma actividad","Depurar = una forma de prueba estática"],
   c:1,e:"Probar provoca fallos (dinámica) o encuentra defectos (estática). Depurar localiza la causa del fallo y la corrige; no es una actividad de prueba."},
- {cap:1,k:"k2",q:"Un sistema cumple todos los requisitos especificados y no tiene defectos conocidos, pero los usuarios lo rechazan porque no cubre sus necesidades reales. ¿Qué principio ilustra este caso?",
+ {id:"s1-03",cap:1,sec:"1.3",k:"k2",q:"Un sistema cumple todos los requisitos especificados y no tiene defectos conocidos, pero los usuarios lo rechazan porque no cubre sus necesidades reales. ¿Qué principio ilustra este caso?",
   op:["Los defectos se agrupan","Falacia de la ausencia de defectos","Las pruebas se desgastan","La prueba exhaustiva es imposible"],
   c:1,e:"Es la falacia de la ausencia de defectos: verificar y corregir todo no garantiza un sistema útil. Hace falta validación (satisfacer necesidades reales), no solo verificación."},
- {cap:1,k:"k2",q:"¿Por qué la prueba es una forma de control de la calidad (CC) y no de aseguramiento de la calidad (AC)?",
+ {id:"s1-04",cap:1,sec:"1.2",k:"k2",q:"¿Por qué la prueba es una forma de control de la calidad (CC) y no de aseguramiento de la calidad (AC)?",
   op:["Porque el CC es preventivo y orientado al proceso, igual que la prueba","Porque la prueba es un enfoque correctivo orientado al producto, mientras que el AC es preventivo y orientado al proceso","Porque AC y CC son exactamente lo mismo","Porque la prueba solo se ocupa de mejorar los procesos de desarrollo"],
   c:1,e:"La prueba evalúa el producto para detectar defectos (CC, correctivo, orientado al producto). El AC es preventivo y orientado al proceso (un buen proceso produce un buen producto)."},
- {cap:1,k:"k1",q:"¿Cuál de los siguientes NO es uno de los siete principios de la prueba?",
+ {id:"s1-05",cap:1,sec:"1.3",k:"k1",q:"¿Cuál de los siguientes NO es uno de los siete principios de la prueba?",
   op:["La prueba temprana ahorra tiempo y dinero","La prueba exhaustiva es imposible","La automatización garantiza la ausencia de defectos","La prueba depende del contexto"],
   c:2,e:"«La automatización garantiza la ausencia de defectos» no es un principio (y es falso). Los siete principios incluyen prueba temprana, imposibilidad de prueba exhaustiva y dependencia del contexto."},
- {cap:1,k:"k2",q:"Durante el análisis de prueba se responde principalmente a una pregunta. ¿Cuál?",
+ {id:"s1-06",cap:1,sec:"1.4",k:"k2",q:"Durante el análisis de prueba se responde principalmente a una pregunta. ¿Cuál?",
   op:["¿Cómo llevar a cabo la prueba?","¿Qué hay que probar, en términos de criterios de cobertura?","¿Quién ejecutará las pruebas?","¿Cuándo se entregará el producto?"],
   c:1,e:"El análisis de prueba responde a «¿qué probar?» identificando condiciones de prueba y criterios de cobertura. El «¿cómo?» corresponde al diseño de prueba."},
- {cap:1,k:"k2",q:"¿Qué ventaja aporta principalmente un nivel adecuado de independencia de la prueba?",
+ {id:"s1-07",cap:1,sec:"1.5",k:"k2",q:"¿Qué ventaja aporta principalmente un nivel adecuado de independencia de la prueba?",
   op:["Elimina por completo la necesidad de que los desarrolladores prueben su código","Tiende a encontrar más defectos, al reconocer tipos de fallo distintos a los del autor","Reduce siempre el coste total del proyecto a cero","Garantiza que no se introduzcan nuevos defectos"],
   c:1,e:"Un probador independiente del autor suele detectar defectos que el autor pasa por alto. No sustituye la prueba de los desarrolladores y un exceso de independencia puede aislar al equipo de prueba."},
- {cap:1,k:"k2",q:"¿Para qué sirve mantener la trazabilidad entre la base de prueba y los productos de prueba?",
+ {id:"s1-08",cap:1,sec:"1.4",k:"k2",q:"¿Para qué sirve mantener la trazabilidad entre la base de prueba y los productos de prueba?",
   op:["Para sustituir la necesidad de un plan de prueba","Para evaluar la cobertura, analizar el impacto de los cambios y facilitar auditorías","Para impedir cualquier cambio en los requisitos","Para automatizar todos los casos de prueba"],
   c:1,e:"La trazabilidad permite medir cobertura respecto a la base de prueba, analizar el impacto de los cambios y dar soporte a auditorías y a la evaluación del avance."},
  // ---- Capítulo 2 (6) ----
- {cap:2,k:"k2",q:"¿Cuál es una buena práctica de prueba aplicable a cualquier modelo de ciclo de vida?",
+ {id:"s1-09",cap:2,sec:"2.1",k:"k2",q:"¿Cuál es una buena práctica de prueba aplicable a cualquier modelo de ciclo de vida?",
   op:["Esperar a tener el sistema completo para empezar a analizar y diseñar las pruebas","Que cada actividad de desarrollo tenga su correspondiente actividad de prueba","Documentar exhaustivamente todas las pruebas, incluso en proyectos ágiles","Asignar un único nivel de prueba a todo el proyecto"],
   c:1,e:"Una buena práctica universal es que cada actividad de desarrollo tenga su actividad de prueba asociada, con análisis y diseño empezando temprano. El nivel de documentación, en cambio, depende del modelo."},
- {cap:2,k:"k2",q:"¿Qué describe mejor la prueba de aceptación?",
+ {id:"s1-10",cap:2,sec:"2.2",k:"k2",q:"¿Qué describe mejor la prueba de aceptación?",
   op:["Probar componentes de forma aislada en el entorno del desarrollador","Validar la preparación para el despliegue y que el sistema satisface las necesidades de negocio del usuario","Probar las interfaces internas entre componentes","Medir la cobertura de código del sistema"],
   c:1,e:"La prueba de aceptación se concentra en la validación y en demostrar la preparación para el despliegue. Sus formas incluyen PAU, operativa, contractual/regulatoria, alfa y beta."},
- {cap:2,k:"k2",q:"La prueba que evalúa «lo bien que se comporta» el sistema (rendimiento, usabilidad, fiabilidad, seguridad) es:",
+ {id:"s1-11",cap:2,sec:"2.2",k:"k2",q:"La prueba que evalúa «lo bien que se comporta» el sistema (rendimiento, usabilidad, fiabilidad, seguridad) es:",
   op:["Prueba funcional","Prueba no funcional","Prueba de confirmación","Prueba de componente"],
   c:1,e:"La prueba no funcional evalúa características de calidad como rendimiento, usabilidad, fiabilidad o seguridad (ISO 25010). La funcional evalúa «qué» hace el sistema."},
- {cap:2,k:"k2",q:"En DevOps, ¿cuál es un beneficio de la integración continua (IC) desde el punto de vista de la prueba?",
+ {id:"s1-12",cap:2,sec:"2.1",k:"k2",q:"En DevOps, ¿cuál es un beneficio de la integración continua (IC) desde el punto de vista de la prueba?",
   op:["Elimina la necesidad de cualquier prueba manual","Aporta retroalimentación rápida sobre la calidad del código y promueve el desplazamiento a la izquierda","Garantiza que no haya regresiones sin necesidad de pruebas","Sustituye la gestión de la configuración"],
   c:1,e:"La IC da feedback rápido y anima a entregar código acompañado de pruebas de componente y análisis estático (shift-left). La prueba manual desde la perspectiva del usuario sigue siendo necesaria."},
- {cap:2,k:"k2",q:"¿Qué afirmación sobre la prueba de regresión es correcta?",
+ {id:"s1-13",cap:2,sec:"2.2",k:"k2",q:"¿Qué afirmación sobre la prueba de regresión es correcta?",
   op:["Comprueba únicamente que el defecto corregido ha desaparecido","Confirma que un cambio no ha provocado consecuencias adversas en partes no modificadas; es buena candidata a la automatización","Solo se realiza en la prueba de aceptación","No requiere ningún análisis de impacto"],
   c:1,e:"La regresión verifica que el cambio no rompió lo que ya funcionaba. Como se repite mucho, conviene automatizarla, y un análisis de impacto ayuda a acotar su alcance. Comprobar que el defecto concreto desapareció es prueba de confirmación."},
- {cap:2,k:"k2",q:"¿Qué caracteriza al enfoque de desarrollo guiado por prueba (DGP/TDD)?",
+ {id:"s1-14",cap:2,sec:"2.1",k:"k2",q:"¿Qué caracteriza al enfoque de desarrollo guiado por prueba (DGP/TDD)?",
   op:["Se escribe primero la prueba, luego el código que la satisface y después se refactoriza","Las pruebas se escriben solo al final, tras completar el código","Se prescinde por completo de las pruebas automatizadas","Las pruebas las redactan únicamente los representantes de negocio"],
   c:0,e:"En TDD se dirige la codificación con casos de prueba: primero la prueba, luego el código que la pasa, luego refactorizar. Aplica prueba temprana y desplazamiento a la izquierda."},
  // ---- Capítulo 3 (4) ----
- {cap:3,k:"k1",q:"¿Cuál de los siguientes productos de trabajo es adecuado para el análisis estático (no solo para la revisión)?",
+ {id:"s1-15",cap:3,sec:"3.1",k:"k1",q:"¿Cuál de los siguientes productos de trabajo es adecuado para el análisis estático (no solo para la revisión)?",
   op:["Una conversación informal sin documentar","Código fuente o modelos con una estructura/sintaxis formal","La intuición del probador","Una demo en vídeo del producto"],
   c:1,e:"El análisis estático necesita una estructura formal comprobable (código, modelos, texto con sintaxis). Cualquier producto legible puede revisarse, pero no todo es analizable por herramienta."},
- {cap:3,k:"k2",q:"¿Cuál es el tipo de revisión MÁS formal y cuál su objetivo principal?",
+ {id:"s1-16",cap:3,sec:"3.2",k:"k2",q:"¿Cuál es el tipo de revisión MÁS formal y cuál su objetivo principal?",
   op:["Revisión informal; generar consenso técnico","Revisión guiada; formar a los revisores","Inspección; encontrar el máximo número de anomalías siguiendo el proceso completo y recopilando métricas","Revisión técnica; documentar el producto"],
   c:2,e:"La inspección es la revisión más formal: sigue el proceso completo, recopila métricas y busca el máximo de anomalías. En ella el autor no puede ser revisor ni escriba."},
- {cap:3,k:"k2",q:"¿Quién es responsable de asegurar el funcionamiento eficaz de la reunión de revisión y un entorno seguro para que todos hablen?",
+ {id:"s1-17",cap:3,sec:"3.2",k:"k2",q:"¿Quién es responsable de asegurar el funcionamiento eficaz de la reunión de revisión y un entorno seguro para que todos hablen?",
   op:["El autor","El moderador (facilitador)","El escriba","El gestor"],
   c:1,e:"El moderador/facilitador media, gestiona el tiempo y mantiene un entorno seguro. El escriba registra anomalías; el autor crea y corrige el producto; el gestor aporta recursos."},
- {cap:3,k:"k1",q:"¿Cuál de los siguientes es un factor de éxito de las revisiones?",
+ {id:"s1-18",cap:3,sec:"3.2",k:"k1",q:"¿Cuál de los siguientes es un factor de éxito de las revisiones?",
   op:["Utilizar los resultados para evaluar el rendimiento de los participantes","Definir objetivos claros y criterios de salida medibles","Revisar siempre el producto completo en una sola sesión","Evitar dar retroalimentación a los autores"],
   c:1,e:"Objetivos claros y criterios de salida medibles son factores de éxito. Nunca debe evaluarse a las personas, conviene revisar en fragmentos pequeños y dar retroalimentación a los autores."},
  // ---- Capítulo 4 (11) ----
- {cap:4,k:"k2",q:"¿En qué se basan las técnicas de prueba de caja negra?",
+ {id:"s1-19",cap:4,sec:"4.1",k:"k2",q:"¿En qué se basan las técnicas de prueba de caja negra?",
   op:["En la estructura interna y el código del objeto de prueba","En el comportamiento especificado, sin referencia a la estructura interna","Exclusivamente en la experiencia del probador","En la cobertura de sentencias y ramas"],
   c:1,e:"Las técnicas de caja negra (basadas en la especificación) analizan el comportamiento especificado sin mirar la estructura interna; por eso resisten cambios de implementación que no alteren el comportamiento."},
- {cap:4,k:"k3",q:"Un descuento se aplica así: importe < 100 € → sin descuento; 100–500 € (incluidos) → 10 %; > 500 € → 20 %. Con partición de equivalencia, ¿cuántas particiones de importe válidas hay?",
+ {id:"s1-20",cap:4,sec:"4.2",k:"k3",q:"Un descuento se aplica así: importe < 100 € → sin descuento; 100–500 € (incluidos) → 10 %; > 500 € → 20 %. Con partición de equivalencia, ¿cuántas particiones de importe válidas hay?",
   op:["Dos","Tres","Cuatro","Una"],
   c:1,e:"Hay tres particiones válidas según el procesamiento: [<100], [100–500] y [>500]. Cada una se procesa de forma distinta, así que basta un valor representativo de cada una."},
- {cap:4,k:"k3",q:"Para la frontera de los 500 € del caso anterior (500 incluido en el 10 %, 501 ya al 20 %), ¿qué valores prueba el AVF de 3 valores en esa frontera?",
+ {id:"s1-21",cap:4,sec:"4.2",k:"k3",q:"Para la frontera de los 500 € del caso anterior (500 incluido en el 10 %, 501 ya al 20 %), ¿qué valores prueba el AVF de 3 valores en esa frontera?",
   op:["500 y 501","499, 500 y 501","500 y 600","Solo 500"],
   c:1,e:"El AVF de 3 valores prueba el valor frontera y sus dos vecinos: 499, 500 y 501. El AVF de 2 valores probaría únicamente 500 y 501."},
- {cap:4,k:"k2",q:"¿Cuándo resulta especialmente adecuada la prueba de tabla de decisión?",
+ {id:"s1-22",cap:4,sec:"4.2",k:"k2",q:"¿Cuándo resulta especialmente adecuada la prueba de tabla de decisión?",
   op:["Cuando el sistema tiene un único estado y ninguna condición","Cuando distintas combinaciones de condiciones producen distintos resultados (reglas de negocio)","Cuando solo se quiere medir la cobertura de código","Cuando no hay especificación disponible"],
   c:1,e:"La tabla de decisión registra de forma sistemática combinaciones de condiciones y sus acciones; es ideal para lógica/reglas de negocio complejas y ayuda a detectar lagunas o contradicciones."},
- {cap:4,k:"k3",q:"En una tabla de decisión, ¿qué representa cada columna (regla)?",
+ {id:"s1-23",cap:4,sec:"4.2",k:"k3",q:"En una tabla de decisión, ¿qué representa cada columna (regla)?",
   op:["Un estado del sistema","Una combinación única de condiciones con sus acciones asociadas","Una sentencia de código","Un valor frontera"],
   c:1,e:"Cada columna es una regla de decisión: una combinación concreta de valores de las condiciones junto con las acciones resultantes. La cobertura del 100 % exige practicar todas las columnas factibles."},
- {cap:4,k:"k2",q:"En la prueba de transición de estado, una transición puede estar condicionada por:",
+ {id:"s1-24",cap:4,sec:"4.2",k:"k2",q:"En la prueba de transición de estado, una transición puede estar condicionada por:",
   op:["Una condición de guarda asociada al evento","El número de sentencias del código","La severidad de un defecto","El criterio de salida de la prueba"],
   c:0,e:"Una transición la inicia un evento, que puede llevar una condición de guarda (y opcionalmente una acción). La sintaxis típica es «evento [guarda] / acción»."},
- {cap:4,k:"k2",q:"¿Qué criterio de cobertura de transición de estado es el más utilizado y garantiza también la cobertura de todos los estados?",
+ {id:"s1-25",cap:4,sec:"4.2",k:"k2",q:"¿Qué criterio de cobertura de transición de estado es el más utilizado y garantiza también la cobertura de todos los estados?",
   op:["Cobertura de todos los estados","Cobertura de transiciones válidas (conmutador 0)","Cobertura de una sola transición inválida","Cobertura de sentencia"],
   c:1,e:"La cobertura de transiciones válidas (conmutador 0) es la más usada y, al recorrer todas las transiciones válidas, garantiza visitar todos los estados (no a la inversa)."},
- {cap:4,k:"k3",q:"Una función tiene un «if» sin «else». Un conjunto de pruebas ejecuta todas las sentencias del cuerpo del «if». ¿Qué se puede afirmar?",
+ {id:"s1-26",cap:4,sec:"4.3",k:"k3",q:"Una función tiene un «if» sin «else». Un conjunto de pruebas ejecuta todas las sentencias del cuerpo del «if». ¿Qué se puede afirmar?",
   op:["Se ha logrado el 100 % de cobertura de rama","Se puede haber logrado el 100 % de cobertura de sentencia, pero no necesariamente el 100 % de rama","Se ha logrado el 100 % de ambas coberturas","No se ha logrado ninguna cobertura"],
   c:1,e:"Ejecutar todas las sentencias da 100 % de sentencia, pero falta la rama «falsa» del «if» (cuando no se entra), así que no se garantiza el 100 % de rama. La rama subsume a la sentencia, no al revés."},
- {cap:4,k:"k2",q:"¿Cuál es una característica de la prueba basada en lista de comprobación?",
+ {id:"s1-27",cap:4,sec:"4.4",k:"k2",q:"¿Cuál es una característica de la prueba basada en lista de comprobación?",
   op:["Sus elementos suelen formularse como preguntas comprobables y la lista se actualiza periódicamente","Debe contener elementos que se comprueban automáticamente","Garantiza una repetibilidad perfecta entre ejecuciones","Sustituye a todas las demás técnicas de prueba"],
   c:0,e:"Los elementos de la checklist se formulan como preguntas comprobables por separado y la lista se revisa periódicamente. Las listas de alto nivel aumentan la cobertura pero reducen la repetibilidad."},
- {cap:4,k:"k2",q:"Según el criterio INVEST, una buena historia de usuario debe ser, entre otras cosas:",
+ {id:"s1-28",cap:4,sec:"4.5",k:"k2",q:"Según el criterio INVEST, una buena historia de usuario debe ser, entre otras cosas:",
   op:["Inflexible, Numerosa, Vaga, Extensa, Subjetiva y Teórica","Independiente, Negociable, Valiosa, Estimable, Pequeña y Comprobable","Idéntica para todos los equipos","Imposible de probar hasta que se implemente"],
   c:1,e:"INVEST = Independiente, Negociable, Valiosa, Estimable, Pequeña y Comprobable (Testable). Si no se sabe cómo probar una historia, suele ser señal de que no está clara."},
- {cap:4,k:"k3",q:"En el desarrollo guiado por prueba de aceptación (DGPA/ATDD), ¿cuándo se crean los casos de prueba?",
+ {id:"s1-29",cap:4,sec:"4.5",k:"k3",q:"En el desarrollo guiado por prueba de aceptación (DGPA/ATDD), ¿cuándo se crean los casos de prueba?",
   op:["Después de implementar y desplegar la historia de usuario","Antes de implementar la historia, en un taller de especificación con varias perspectivas","Solo durante la prueba de aceptación final","Únicamente cuando aparece un defecto"],
   c:1,e:"El DGPA es un enfoque «probar primero»: los casos se crean antes de implementar, en un taller con cliente, desarrollo y prueba, a partir de los criterios de aceptación."},
  // ---- Capítulo 5 (9) ----
- {cap:5,k:"k2",q:"¿Qué son los criterios de salida (en Ágil, Definición de Hecho)?",
+ {id:"s1-30",cap:5,sec:"5.1",k:"k2",q:"¿Qué son los criterios de salida (en Ágil, Definición de Hecho)?",
   op:["Las precondiciones para empezar una actividad","Lo que debe lograrse para declarar completada una actividad","La lista de defectos abiertos","El presupuesto total del proyecto"],
   c:1,e:"Los criterios de salida definen qué debe cumplirse para dar por terminada una actividad (cobertura, pruebas ejecutadas, defectos resueltos). En Ágil se llaman Definición de Hecho; los de entrada, Definición de Preparado."},
- {cap:5,k:"k3",q:"Tres expertos estiman una tarea: a=4, m=7, b=16 días-persona (tres puntos). ¿Cuál es la estimación E?",
+ {id:"s1-31",cap:5,sec:"5.1",k:"k3",q:"Tres expertos estiman una tarea: a=4, m=7, b=16 días-persona (tres puntos). ¿Cuál es la estimación E?",
   op:["8 días-persona","9 días-persona","7 días-persona","10 días-persona"],
   c:0,e:"E = (a + 4m + b) / 6 = (4 + 28 + 16) / 6 = 48 / 6 = 8 días-persona."},
- {cap:5,k:"k3",q:"Un caso de prueba de alta prioridad depende de los datos que deja preparado un caso de baja prioridad. ¿En qué orden deben ejecutarse?",
+ {id:"s1-32",cap:5,sec:"5.1",k:"k3",q:"Un caso de prueba de alta prioridad depende de los datos que deja preparado un caso de baja prioridad. ¿En qué orden deben ejecutarse?",
   op:["Primero el de alta prioridad, siempre","Primero el de baja prioridad, porque el de alta depende de él","En cualquier orden, da igual","No deben ejecutarse hasta eliminar la dependencia"],
   c:1,e:"Las dependencias mandan sobre la prioridad: si un caso de mayor prioridad depende de otro de menor, el de menor prioridad debe ejecutarse primero para que el otro pueda correr."},
- {cap:5,k:"k1",q:"¿Cuál de las siguientes es una métrica de prueba típica?",
+ {id:"s1-33",cap:5,sec:"5.3",k:"k1",q:"¿Cuál de las siguientes es una métrica de prueba típica?",
   op:["El número de empleados de la empresa","La densidad de defectos o el porcentaje de detección de defectos","El color corporativo del producto","La antigüedad del lenguaje de programación"],
   c:1,e:"Las métricas de defectos (número, densidad, porcentaje de detección) son métricas de prueba habituales, junto con las de avance, cobertura, riesgo y coste."},
- {cap:5,k:"k2",q:"¿Qué diferencia a un informe de avance de la prueba de un informe de compleción de la prueba?",
+ {id:"s1-34",cap:5,sec:"5.3",k:"k2",q:"¿Qué diferencia a un informe de avance de la prueba de un informe de compleción de la prueba?",
   op:["El de avance se elabora una sola vez al final; el de compleción, a diario","El de avance es frecuente y mantiene informados durante la prueba; el de compleción resume una etapa ya terminada","Ambos son idénticos","El de compleción no incluye métricas"],
   c:1,e:"El informe de avance es frecuente (a veces informal) y apoya el control durante la prueba; el de compleción resume una etapa finalizada siguiendo una plantilla y se produce una vez."},
- {cap:5,k:"k2",q:"¿Cómo apoya a la prueba la gestión de la configuración?",
+ {id:"s1-35",cap:5,sec:"5.4",k:"k2",q:"¿Cómo apoya a la prueba la gestión de la configuración?",
   op:["Eliminando la necesidad de control de versiones","Identificando y versionando los productos de prueba y estableciendo líneas base, lo que permite reproducir resultados","Corrigiendo automáticamente los defectos encontrados","Sustituyendo al plan de prueba"],
   c:1,e:"La gestión de la configuración identifica, controla y versiona los productos de prueba; una vez aprobada, una línea base solo cambia con control de cambios, permitiendo reproducir ejecuciones anteriores."},
- {cap:5,k:"k2",q:"¿Cuál de los siguientes es un riesgo de proyecto (no de producto)?",
+ {id:"s1-36",cap:5,sec:"5.2",k:"k2",q:"¿Cuál de los siguientes es un riesgo de proyecto (no de producto)?",
   op:["Un cálculo erróneo en el módulo de facturación","Un tiempo de respuesta inadecuado de la aplicación","La marcha de personal clave o un retraso en la entrega de un proveedor","Una vulnerabilidad de seguridad en el código"],
   c:2,e:"La escasez de personal o el incumplimiento de un proveedor son riesgos de proyecto (afectan a plazos/gestión). Los cálculos erróneos, el rendimiento o las vulnerabilidades son riesgos de producto."},
- {cap:5,k:"k2",q:"¿Cómo influye el análisis del riesgo de producto en la prueba?",
+ {id:"s1-37",cap:5,sec:"5.2",k:"k2",q:"¿Cómo influye el análisis del riesgo de producto en la prueba?",
   op:["Hace innecesaria la priorización de casos de prueba","Permite concentrar el esfuerzo: a mayor riesgo, mayor minuciosidad y alcance de la prueba","Obliga a probar todo con la misma intensidad","Solo sirve para informar a la dirección"],
   c:1,e:"En las pruebas basadas en el riesgo, el análisis del riesgo de producto concentra el esfuerzo donde más importa: determina alcance, niveles, técnicas, cobertura y prioridad para reducir el riesgo residual."},
- {cap:5,k:"k3",q:"¿Cuál de los siguientes campos es imprescindible en un buen informe de defecto para permitir su corrección?",
+ {id:"s1-38",cap:5,sec:"5.5",k:"k3",q:"¿Cuál de los siguientes campos es imprescindible en un buen informe de defecto para permitir su corrección?",
   op:["El salario del probador que lo encontró","Una descripción reproducible con pasos, resultados esperado y real, y el entorno de prueba","El número total de pruebas de la suite","La fecha de nacimiento del autor del código"],
   c:1,e:"Un informe útil incluye pasos para reproducir, resultados esperado y real, objeto y entorno de prueba, severidad, prioridad y estado: lo necesario para diagnosticar y corregir sin re-investigar a ciegas."},
  // ---- Capítulo 6 (2) ----
- {cap:6,k:"k2",q:"¿Cuál de los siguientes es un tipo de herramienta de apoyo a la prueba?",
+ {id:"s1-39",cap:6,sec:"6.1",k:"k2",q:"¿Cuál de los siguientes es un tipo de herramienta de apoyo a la prueba?",
   op:["Herramientas de gestión de pruebas, defectos y configuración","Herramientas que escriben los requisitos por sí solas","Herramientas que eliminan la necesidad de probar","Herramientas que garantizan cero defectos"],
   c:0,e:"Existen herramientas de gestión (CVDS, requisitos, pruebas, defectos, configuración), de prueba estática, de diseño/ejecución, no funcionales, de DevOps, etc. Ninguna herramienta elimina la necesidad de probar."},
- {cap:6,k:"k1",q:"¿Qué afirmación sobre la automatización de la prueba es correcta?",
+ {id:"s1-40",cap:6,sec:"6.2",k:"k1",q:"¿Qué afirmación sobre la automatización de la prueba es correcta?",
   op:["Adquirir la herramienta garantiza por sí sola el éxito","Aporta consistencia y feedback más rápido, pero exige esfuerzo de introducción, mantenimiento y formación","Sustituye por completo toda prueba manual","Hace innecesaria la gestión de la configuración del testware"],
   c:1,e:"La automatización ofrece beneficios (consistencia, rapidez, métricas) pero no es gratis: comprar la herramienta no basta, requiere mantenimiento y formación, y la prueba manual desde la perspectiva del usuario sigue siendo necesaria."}
 ];
@@ -609,129 +758,129 @@ const EXAMEN=[
 ========================================================= */
 const EXAMEN2=[
  // ---- Capítulo 1 (8) ----
- {cap:1,k:"k2",q:"¿Cuál de las siguientes afirmaciones sobre probar y depurar es correcta?",
+ {id:"s2-01",cap:1,sec:"1.1",k:"k2",q:"¿Cuál de las siguientes afirmaciones sobre probar y depurar es correcta?",
   op:["Probar y depurar son la misma actividad realizada por el mismo rol","Probar puede provocar fallos o encontrar defectos; depurar localiza la causa del fallo y la corrige","Depurar es una técnica de prueba dinámica","Probar consiste en corregir los defectos encontrados"],
   c:1,e:"Probar provoca fallos (dinámica) o encuentra defectos (estática). Depurar —reproducir, diagnosticar y corregir— no es una actividad de prueba: lo realiza el desarrollo."},
- {cap:1,k:"k1",q:"¿Cuál es un objetivo característico de la prueba?",
+ {id:"s2-02",cap:1,sec:"1.1",k:"k1",q:"¿Cuál es un objetivo característico de la prueba?",
   op:["Garantizar la ausencia total de defectos","Generar confianza en el nivel de calidad del objeto de prueba","Sustituir al aseguramiento de la calidad","Eliminar la necesidad de validación"],
   c:1,e:"Generar confianza en la calidad es un objetivo de la prueba. Garantizar ausencia de defectos es imposible (principio 1) y la prueba no sustituye al AC ni a la validación."},
- {cap:1,k:"k2",q:"Una persona configura mal un parámetro y, al ejecutarse, el sistema se cae. ¿Qué representa la caída observada?",
+ {id:"s2-03",cap:1,sec:"1.2",k:"k2",q:"Una persona configura mal un parámetro y, al ejecutarse, el sistema se cae. ¿Qué representa la caída observada?",
   op:["Un error","Un defecto","Un fallo","Una causa raíz"],
   c:2,e:"La caída observable al ejecutar es el fallo. La equivocación de la persona es el error y el parámetro mal configurado es el defecto que lo provoca."},
- {cap:1,k:"k2",q:"¿Qué principio explica que concentrar las pruebas en los módulos históricamente más problemáticos suele ser eficaz?",
+ {id:"s2-04",cap:1,sec:"1.3",k:"k2",q:"¿Qué principio explica que concentrar las pruebas en los módulos históricamente más problemáticos suele ser eficaz?",
   op:["La prueba exhaustiva es imposible","Los defectos se agrupan","La prueba temprana ahorra tiempo y dinero","Falacia de la ausencia de defectos"],
   c:1,e:"El principio «los defectos se agrupan» (Pareto): un pequeño número de módulos concentra la mayoría de los defectos, lo que orienta el esfuerzo de prueba."},
- {cap:1,k:"k2",q:"En el proceso de prueba, ¿qué actividad responde a «¿cómo llevar a cabo la prueba?»?",
+ {id:"s2-05",cap:1,sec:"1.4",k:"k2",q:"En el proceso de prueba, ¿qué actividad responde a «¿cómo llevar a cabo la prueba?»?",
   op:["Análisis de la prueba","Diseño de la prueba","Monitorización de la prueba","Compleción de la prueba"],
   c:1,e:"El diseño de prueba elabora las condiciones en casos de prueba y define datos y entorno: responde a «¿cómo?». El análisis responde a «¿qué probar?»."},
- {cap:1,k:"k1",q:"¿Qué describe el enfoque de equipo completo (whole-team)?",
+ {id:"s2-06",cap:1,sec:"1.5",k:"k1",q:"¿Qué describe el enfoque de equipo completo (whole-team)?",
   op:["Solo los probadores son responsables de la calidad","La responsabilidad de la calidad se reparte en todo el equipo, que colabora estrechamente","El equipo de prueba trabaja aislado del desarrollo","La dirección asume toda la responsabilidad de la prueba"],
   c:1,e:"En el enfoque de equipo completo, todo el equipo comparte la responsabilidad de la calidad y colabora; cualquier miembro con competencias de prueba contribuye."},
- {cap:1,k:"k2",q:"¿Por qué la prueba (control de calidad) no equivale al aseguramiento de la calidad?",
+ {id:"s2-07",cap:1,sec:"1.2",k:"k2",q:"¿Por qué la prueba (control de calidad) no equivale al aseguramiento de la calidad?",
   op:["El AC es correctivo y la prueba es preventiva","La prueba evalúa el producto (correctivo); el AC mejora los procesos (preventivo)","Son sinónimos en la práctica","El AC solo se aplica a la documentación"],
   c:1,e:"La prueba es control de calidad: correctivo y orientado al producto. El AC es preventivo y orientado al proceso (un buen proceso produce un buen producto)."},
- {cap:1,k:"k2",q:"Un exceso de independencia de la prueba puede tener un inconveniente. ¿Cuál?",
+ {id:"s2-08",cap:1,sec:"1.5",k:"k2",q:"Un exceso de independencia de la prueba puede tener un inconveniente. ¿Cuál?",
   op:["Detecta menos tipos de defectos","Puede aislar al equipo de prueba y hacer que desarrollo pierda el sentido de responsabilidad sobre la calidad","Reduce la objetividad de las pruebas","Impide cualquier comunicación con los implicados"],
   c:1,e:"Aunque la independencia suele encontrar más defectos, en exceso puede aislar al equipo de prueba, crear cuellos de botella y reducir la responsabilidad de desarrollo sobre la calidad."},
  // ---- Capítulo 2 (6) ----
- {cap:2,k:"k2",q:"¿Qué nivel de prueba se concentra en el comportamiento de extremo a extremo de todo el sistema, tanto funcional como no funcional?",
+ {id:"s2-09",cap:2,sec:"2.2",k:"k2",q:"¿Qué nivel de prueba se concentra en el comportamiento de extremo a extremo de todo el sistema, tanto funcional como no funcional?",
   op:["Prueba de componente","Prueba de integración de componentes","Prueba de sistema","Prueba de integración de sistemas"],
   c:2,e:"La prueba de sistema evalúa el comportamiento global del sistema completo, incluyendo tareas de extremo a extremo (funcional) y características de calidad (no funcional)."},
- {cap:2,k:"k2",q:"¿Cuál de las siguientes es una característica de calidad NO funcional según ISO/IEC 25010?",
+ {id:"s2-10",cap:2,sec:"2.2",k:"k2",q:"¿Cuál de las siguientes es una característica de calidad NO funcional según ISO/IEC 25010?",
   op:["La corrección funcional","La eficiencia de desempeño","La completitud funcional","La pertinencia funcional"],
   c:1,e:"La eficiencia de desempeño es no funcional. Completitud, corrección y pertinencia funcional son las metas de la prueba funcional."},
- {cap:2,k:"k2",q:"Tras una corrección, se vuelven a ejecutar exactamente los casos que antes fallaban por el defecto para comprobar que ahora pasan. ¿Qué tipo de prueba es?",
+ {id:"s2-11",cap:2,sec:"2.2",k:"k2",q:"Tras una corrección, se vuelven a ejecutar exactamente los casos que antes fallaban por el defecto para comprobar que ahora pasan. ¿Qué tipo de prueba es?",
   op:["Prueba de regresión","Prueba de confirmación","Prueba de sistema","Prueba no funcional"],
   c:1,e:"Reejecutar los casos que fallaban para comprobar que el defecto se corrigió es prueba de confirmación. La regresión busca efectos adversos en lo que no se tocó."},
- {cap:2,k:"k2",q:"¿Qué buena práctica de prueba aplica a cualquier modelo de ciclo de vida?",
+ {id:"s2-12",cap:2,sec:"2.1",k:"k2",q:"¿Qué buena práctica de prueba aplica a cualquier modelo de ciclo de vida?",
   op:["Toda la documentación de prueba debe ser exhaustiva","Cada nivel de prueba tiene objetivos específicos y diferentes, evitando redundancia","La prueba dinámica empieza siempre antes que la estática","Un único nivel de prueba cubre todo el proyecto"],
   c:1,e:"Una buena práctica universal es que cada nivel de prueba tenga objetivos propios y diferenciados, para ser comprensivo sin redundancia. El nivel de documentación depende del modelo."},
- {cap:2,k:"k2",q:"¿Qué describe mejor el enfoque DGPA (ATDD)?",
+ {id:"s2-13",cap:2,sec:"2.1",k:"k2",q:"¿Qué describe mejor el enfoque DGPA (ATDD)?",
   op:["Las pruebas se escriben solo después de implementar","Las pruebas se derivan de los criterios de aceptación antes de implementar la historia","Es un nivel de prueba","Sustituye a la prueba de regresión"],
   c:1,e:"En DGPA (ATDD), las pruebas se obtienen de los criterios de aceptación y se escriben antes de implementar la parte correspondiente de la aplicación; es un enfoque «probar primero»."},
- {cap:2,k:"k2",q:"¿Cuál es un desencadenante de la prueba de mantenimiento relacionado con la retirada de un sistema?",
+ {id:"s2-14",cap:2,sec:"2.3",k:"k2",q:"¿Cuál es un desencadenante de la prueba de mantenimiento relacionado con la retirada de un sistema?",
   op:["La primera redacción de los requisitos","Probar el archivado de datos y los procedimientos de recuperación/restauración","La planificación de la iteración inicial","La definición de las historias de usuario"],
   c:1,e:"Al retirar un sistema puede ser necesario probar el archivado de datos (si hay retención larga) y los procedimientos de recuperación/restauración tras el archivado."},
  // ---- Capítulo 3 (4) ----
- {cap:3,k:"k2",q:"¿Qué tipo de defecto es más fácil de encontrar con prueba estática que con dinámica?",
+ {id:"s2-15",cap:3,sec:"3.1",k:"k2",q:"¿Qué tipo de defecto es más fácil de encontrar con prueba estática que con dinámica?",
   op:["Un problema de rendimiento bajo carga","Una ambigüedad o inconsistencia en los requisitos","Una fuga de memoria en ejecución prolongada","Un tiempo de respuesta inadecuado"],
   c:1,e:"La estática detecta defectos en productos no ejecutables (ambigüedades, inconsistencias en requisitos, código inalcanzable). El rendimiento o las fugas en ejecución requieren prueba dinámica."},
- {cap:3,k:"k1",q:"¿Qué rol de la revisión recopila las anomalías y registra las decisiones durante la reunión?",
+ {id:"s2-16",cap:3,sec:"3.2",k:"k1",q:"¿Qué rol de la revisión recopila las anomalías y registra las decisiones durante la reunión?",
   op:["El autor","El escriba (grabador)","El gestor","El revisor"],
   c:1,e:"El escriba/grabador recopila las anomalías de los revisores y registra decisiones y nuevas anomalías. El moderador facilita; el autor crea y corrige el producto."},
- {cap:3,k:"k2",q:"¿Qué tipo de revisión está dirigida por el autor y puede servir para formar a los revisores y generar consenso?",
+ {id:"s2-17",cap:3,sec:"3.2",k:"k2",q:"¿Qué tipo de revisión está dirigida por el autor y puede servir para formar a los revisores y generar consenso?",
   op:["Inspección","Revisión guiada (walkthrough)","Revisión técnica","Análisis estático"],
   c:1,e:"La revisión guiada la dirige el autor y sirve para evaluar calidad, formar, generar ideas/consenso y detectar anomalías. La inspección es la más formal y la dirige un moderador."},
- {cap:3,k:"k1",q:"¿Cuál de estos es un factor de éxito de las revisiones?",
+ {id:"s2-18",cap:3,sec:"3.2",k:"k1",q:"¿Cuál de estos es un factor de éxito de las revisiones?",
   op:["Usar la revisión para evaluar a los participantes","Revisar en fragmentos pequeños para mantener la concentración","Prescindir de objetivos para ganar flexibilidad","Evitar la formación de los participantes"],
   c:1,e:"Revisar en fragmentos pequeños mantiene la concentración. Nunca debe evaluarse a las personas, y conviene objetivos claros, tiempo de preparación y formación."},
  // ---- Capítulo 4 (11) ----
- {cap:4,k:"k2",q:"¿En qué se basan las técnicas de prueba de caja blanca?",
+ {id:"s2-19",cap:4,sec:"4.1",k:"k2",q:"¿En qué se basan las técnicas de prueba de caja blanca?",
   op:["En la especificación externa del objeto de prueba","En la estructura interna y el procesamiento (código, flujos)","Únicamente en la experiencia del probador","En los criterios de aceptación del cliente"],
   c:1,e:"Las técnicas de caja blanca (basadas en la estructura) analizan la implementación interna; por eso solo pueden diseñarse tras el diseño o la implementación."},
- {cap:4,k:"k3",q:"Un sistema acepta una contraseña de 8 a 16 caracteres (ambos incluidos). Con AVF de 2 valores en la frontera superior, ¿qué longitudes pruebas?",
+ {id:"s2-20",cap:4,sec:"4.2",k:"k3",q:"Un sistema acepta una contraseña de 8 a 16 caracteres (ambos incluidos). Con AVF de 2 valores en la frontera superior, ¿qué longitudes pruebas?",
   op:["16 y 17","15 y 16","16 y 18","Solo 16"],
   c:0,e:"En AVF de 2 valores cada frontera tiene dos elementos: el valor frontera (16) y su vecino de la partición adyacente (17). El AVF de 3 valores añadiría además 15."},
- {cap:4,k:"k3",q:"Aplicando partición de equivalencia a ese mismo campo (8–16), ¿cuántas particiones hay teniendo en cuenta las inválidas?",
+ {id:"s2-21",cap:4,sec:"4.2",k:"k3",q:"Aplicando partición de equivalencia a ese mismo campo (8–16), ¿cuántas particiones hay teniendo en cuenta las inválidas?",
   op:["Una válida y ninguna inválida","Una válida (8–16) y dos inválidas (<8 y >16)","Tres válidas","Solo dos inválidas"],
   c:1,e:"Hay una partición válida (8–16) y dos inválidas: longitudes menores que 8 y mayores que 16. Basta una prueba representativa por partición."},
- {cap:4,k:"k3",q:"En una tabla de decisión con 3 condiciones booleanas independientes, ¿cuántas columnas (reglas) tiene la tabla completa antes de simplificar?",
+ {id:"s2-22",cap:4,sec:"4.2",k:"k3",q:"En una tabla de decisión con 3 condiciones booleanas independientes, ¿cuántas columnas (reglas) tiene la tabla completa antes de simplificar?",
   op:["3","6","8","9"],
   c:2,e:"Con 3 condiciones booleanas hay 2³ = 8 combinaciones posibles, es decir 8 columnas en la tabla completa antes de eliminar las inviables o fusionar."},
- {cap:4,k:"k2",q:"¿Qué criterio de cobertura de transición de estado incluye intentar también las transiciones inválidas?",
+ {id:"s2-23",cap:4,sec:"4.2",k:"k2",q:"¿Qué criterio de cobertura de transición de estado incluye intentar también las transiciones inválidas?",
   op:["Cobertura de todos los estados","Cobertura de transiciones válidas (conmutador 0)","Cobertura de todas las transiciones","Cobertura de sentencia"],
   c:2,e:"La cobertura de todas las transiciones practica las válidas e intenta ejecutar las inválidas; es el mínimo recomendado para software de misión/seguridad críticas."},
- {cap:4,k:"k3",q:"Un fragmento tiene un bucle «while» con una condición. Para lograr el 100 % de cobertura de rama, ¿qué hay que practicar?",
+ {id:"s2-24",cap:4,sec:"4.3",k:"k3",q:"Un fragmento tiene un bucle «while» con una condición. Para lograr el 100 % de cobertura de rama, ¿qué hay que practicar?",
   op:["Solo el caso en que se entra al bucle","Tanto el resultado verdadero (entrar/continuar) como el falso (salir) de la condición","Solo que todas las sentencias del cuerpo se ejecuten","Únicamente que el bucle no se ejecute nunca"],
   c:1,e:"La cobertura de rama exige ejercitar ambos resultados de cada decisión: en un bucle, entrar/continuar (verdadero) y salir (falso). Ejecutar solo las sentencias del cuerpo cubre sentencia, no necesariamente rama."},
- {cap:4,k:"k2",q:"¿Qué afirmación sobre la cobertura de sentencia es correcta?",
+ {id:"s2-25",cap:4,sec:"4.3",k:"k2",q:"¿Qué afirmación sobre la cobertura de sentencia es correcta?",
   op:["100 % de sentencia garantiza 100 % de rama","100 % de sentencia asegura que cada sentencia ejecutable se ha practicado al menos una vez","100 % de sentencia detecta todos los defectos","La cobertura de sentencia subsume la de rama"],
   c:1,e:"El 100 % de cobertura de sentencia asegura ejecutar cada sentencia al menos una vez, pero no garantiza toda la lógica de decisión (la rama subsume a la sentencia, no al revés) ni detecta todos los defectos."},
- {cap:4,k:"k2",q:"¿En qué consiste la técnica de predicción de errores?",
+ {id:"s2-26",cap:4,sec:"4.4",k:"k2",q:"¿En qué consiste la técnica de predicción de errores?",
   op:["Generar casos a partir de un diagrama de estados","Anticipar dónde fallará el software según la experiencia y el conocimiento de errores típicos","Ejecutar el código midiendo cobertura","Derivar pruebas de los criterios de aceptación"],
   c:1,e:"La predicción de errores anticipa errores, defectos y fallos basándose en la experiencia del probador; los ataques de defecto la sistematizan con listas de fallos conocidos."},
- {cap:4,k:"k2",q:"Según el criterio INVEST, ¿qué significa la «T» y por qué importa?",
+ {id:"s2-27",cap:4,sec:"4.5",k:"k2",q:"Según el criterio INVEST, ¿qué significa la «T» y por qué importa?",
   op:["Técnica: debe describir la tecnología a usar","Comprobable (Testable): si no se sabe cómo probarla, suele indicar que la historia no está clara","Temporal: debe tener una fecha límite","Total: debe cubrir todo el sistema"],
   c:1,e:"La «T» de INVEST es Comprobable (Testable). Si un implicado no sabe cómo probar una historia, suele ser señal de que no está suficientemente clara o no aporta valor evidente."},
- {cap:4,k:"k2",q:"¿Cuál es uno de los dos formatos más comunes para redactar criterios de aceptación?",
+ {id:"s2-28",cap:4,sec:"4.5",k:"k2",q:"¿Cuál es uno de los dos formatos más comunes para redactar criterios de aceptación?",
   op:["Orientado a la estructura del código","Orientado al escenario (Dado/Cuando/Entonces)","Orientado a la cobertura de ramas","Orientado al diagrama de clases"],
   c:1,e:"Los criterios de aceptación se redactan orientados a escenario (Dado/Cuando/Entonces, propio de BDD) o orientados a reglas (lista o tabla entrada-salida)."},
- {cap:4,k:"k2",q:"¿Qué es una partición de equivalencia inválida?",
+ {id:"s2-29",cap:4,sec:"4.2",k:"k2",q:"¿Qué es una partición de equivalencia inválida?",
   op:["Una partición que se solapa con otra","Un conjunto de valores que el objeto de prueba debe rechazar o ignorar (o cuyo procesamiento no está especificado)","Una partición vacía","Una partición que solo contiene valores frontera"],
   c:1,e:"Una partición inválida agrupa valores que deben ser rechazados/ignorados o cuyo procesamiento no está definido. Las particiones no deben solaparse ni estar vacías."},
  // ---- Capítulo 5 (9) ----
- {cap:5,k:"k1",q:"¿Cómo se denominan en Ágil los criterios de entrada que una historia debe cumplir para empezar a desarrollarse/probarse?",
+ {id:"s2-30",cap:5,sec:"5.1",k:"k1",q:"¿Cómo se denominan en Ágil los criterios de entrada que una historia debe cumplir para empezar a desarrollarse/probarse?",
   op:["Definición de Hecho (DoD)","Definición de Preparado (DoR)","Criterios de salida","Plan de prueba"],
   c:1,e:"Los criterios de entrada en Ágil son la Definición de Preparado (DoR); los criterios de salida son la Definición de Hecho (DoD)."},
- {cap:5,k:"k3",q:"Estimaciones de tres puntos: a=5, m=8, b=17 días. ¿Cuál es la estimación E?",
+ {id:"s2-31",cap:5,sec:"5.1",k:"k3",q:"Estimaciones de tres puntos: a=5, m=8, b=17 días. ¿Cuál es la estimación E?",
   op:["10 días","9 días","8 días","11 días"],
   c:1,e:"E = (a + 4m + b) / 6 = (5 + 32 + 17) / 6 = 54 / 6 = 9 días."},
- {cap:5,k:"k2",q:"¿Qué técnica de estimación es iterativa, basada en la experiencia, y tiene como variante el póker de planificación?",
+ {id:"s2-32",cap:5,sec:"5.1",k:"k2",q:"¿Qué técnica de estimación es iterativa, basada en la experiencia, y tiene como variante el póker de planificación?",
   op:["Estimación basada en proporciones","Extrapolación","Delphi de banda ancha","Estimación de tres puntos"],
   c:2,e:"El Delphi de banda ancha es iterativo y basado en la experiencia de varios expertos que convergen; el póker de planificación es su variante ágil."},
- {cap:5,k:"k2",q:"En la pirámide de prueba, ¿qué caracteriza a las pruebas de la capa superior?",
+ {id:"s2-33",cap:5,sec:"5.1",k:"k2",q:"En la pirámide de prueba, ¿qué caracteriza a las pruebas de la capa superior?",
   op:["Son pequeñas, rápidas y muy numerosas","Son de extremo a extremo, de mayor alcance y más lentas, y se necesitan pocas","Tienen mayor granularidad que las de la base","Nunca se automatizan"],
   c:1,e:"En la cima hay pocas pruebas de extremo a extremo, lentas y de gran alcance; en la base, muchas pruebas pequeñas, rápidas y aisladas. La pirámide guía el reparto del esfuerzo."},
- {cap:5,k:"k2",q:"En los cuadrantes de prueba, ¿en qué cuadrante encajan la prueba exploratoria y la de usabilidad?",
+ {id:"s2-34",cap:5,sec:"5.1",k:"k2",q:"En los cuadrantes de prueba, ¿en qué cuadrante encajan la prueba exploratoria y la de usabilidad?",
   op:["Q1 (técnico, apoya al equipo)","Q2 (negocio, apoya al equipo)","Q3 (negocio, critica el producto)","Q4 (técnico, critica el producto)"],
   c:2,e:"La exploratoria, la usabilidad y la PAU están en Q3 (orientadas al negocio, critican el producto) y suelen ser manuales."},
- {cap:5,k:"k1",q:"¿Cómo se calcula el nivel de riesgo?",
+ {id:"s2-35",cap:5,sec:"5.2",k:"k1",q:"¿Cómo se calcula el nivel de riesgo?",
   op:["Sumando probabilidad e impacto","Combinando (multiplicando) la probabilidad del riesgo por su impacto","Solo por el impacto","Solo por la probabilidad"],
   c:1,e:"El nivel de riesgo combina probabilidad e impacto (en el enfoque cuantitativo, su producto). A mayor nivel, más importante es tratarlo."},
- {cap:5,k:"k2",q:"¿Cuál de estos es un riesgo de producto (no de proyecto)?",
+ {id:"s2-36",cap:5,sec:"5.2",k:"k2",q:"¿Cuál de estos es un riesgo de producto (no de proyecto)?",
   op:["Un retraso en la entrega de un proveedor","Una estimación inexacta del esfuerzo","Una vulnerabilidad de seguridad en la aplicación","La escasez de personal cualificado"],
   c:2,e:"Una vulnerabilidad de seguridad afecta a la calidad del producto: es un riesgo de producto. Retrasos, estimaciones y personal son riesgos de proyecto."},
- {cap:5,k:"k2",q:"¿Qué información debe incluir un buen informe de defecto para distinguir el grado de impacto de la urgencia de corrección?",
+ {id:"s2-37",cap:5,sec:"5.5",k:"k2",q:"¿Qué información debe incluir un buen informe de defecto para distinguir el grado de impacto de la urgencia de corrección?",
   op:["Solo la severidad","La severidad (impacto) y la prioridad (urgencia), que pueden no coincidir","Solo la prioridad","Únicamente el identificador y el título"],
   c:1,e:"Severidad (impacto del defecto) y prioridad (urgencia de corregirlo) son atributos distintos y pueden no coincidir; ambos deben constar en el informe."},
- {cap:5,k:"k2",q:"¿Cómo apoya a la prueba la gestión de la configuración mediante líneas base?",
+ {id:"s2-38",cap:5,sec:"5.4",k:"k2",q:"¿Cómo apoya a la prueba la gestión de la configuración mediante líneas base?",
   op:["Corrige automáticamente los defectos","Permite volver a una línea base anterior para reproducir resultados de pruebas previas","Elimina la necesidad de criterios de salida","Sustituye al informe de compleción"],
   c:1,e:"La gestión de la configuración versiona los productos de prueba; una vez aprobada, una línea base solo cambia con control de cambios y permite volver a ella para reproducir resultados."},
  // ---- Capítulo 6 (2) ----
- {cap:6,k:"k1",q:"¿Qué afirmación sobre la automatización de la prueba es correcta?",
+ {id:"s2-39",cap:6,sec:"6.2",k:"k1",q:"¿Qué afirmación sobre la automatización de la prueba es correcta?",
   op:["Comprar la herramienta garantiza el éxito","Aporta consistencia y feedback más rápido, pero requiere esfuerzo de introducción, mantenimiento y formación","Elimina toda prueba manual","Hace innecesaria la gestión de configuración del testware"],
   c:1,e:"La automatización ofrece beneficios (consistencia, rapidez, métricas), pero adquirir la herramienta no basta: exige mantenimiento y formación, y no sustituye la prueba manual."},
- {cap:6,k:"k2",q:"¿Qué tipo de herramienta facilita la generación de casos de prueba, datos de prueba y procedimientos?",
+ {id:"s2-40",cap:6,sec:"6.1",k:"k2",q:"¿Qué tipo de herramienta facilita la generación de casos de prueba, datos de prueba y procedimientos?",
   op:["Herramientas de gestión de la configuración","Herramientas de diseño e implementación de pruebas","Herramientas de gestión de defectos","Herramientas de colaboración"],
   c:1,e:"Las herramientas de diseño e implementación facilitan generar casos, datos y procedimientos de prueba. Las de ejecución/cobertura automatizan la ejecución y miden cobertura."}
 ];

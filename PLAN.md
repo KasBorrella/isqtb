@@ -1,7 +1,7 @@
 # Plan de acción — Plataforma de estudio ISTQB
 
 > Documento vivo. Se actualiza en cada iteración. Marca el estado de cada tarea
-> con `[ ]` / `[x]`. Última actualización: 2026-06-11.
+> con `[ ]` / `[x]`. Última actualización: 2026-09-21.
 
 ## 1. Objetivo
 
@@ -43,6 +43,12 @@ prototipo monolítico de CTAL-TAE en [ctal-tae-v2-estudio.html](ctal-tae-v2-estu
 │   ├── foundation/datos.js # (Fase 3) define META, SEMANAS, CAPS, EXAMEN
 │   └── ctal-tae/datos.js   # migrado del prototipo; define window.__CERT__
 ├── docs/md/                # PDFs convertidos a Markdown (fuente de contenido)
+├── test/                   # (Fase 12.1) suite de validación: `npm test`
+│   ├── ejecutar.js         #   runner; admite filtros y --cert=
+│   ├── ayuda.js            #   arranque en jsdom + mini-arnés de aserciones
+│   └── *.test.js           #   datos · navegacion · repaso · mapa · quiz ·
+│                           #   examen · glosario
+├── package.json            # solo para `npm test` (jsdom como devDependency)
 └── PLAN.md
 ```
 
@@ -57,7 +63,17 @@ prototipo monolítico de CTAL-TAE en [ctal-tae-v2-estudio.html](ctal-tae-v2-estu
 ```js
 { q:"enunciado", op:["a","b","c","d"], c:1, e:"explicación", k:"k2", cap:3 }
 ```
-**Modelo de capítulo:** `{ n:1, titulo:"…", html:"…teoría…", quiz:[ …preguntas… ] }`
+**Modelo de capítulo:**
+```js
+{ n:1, titulo:"…", resumen:"…",
+  secciones:[ { id:"1.1", titulo:"…",                       // numeración del syllabus
+                lo:[{id:"FL-1.1.1",k:"K1",t:"…"}],          // objetivos de aprendizaje
+                html:"…teoría…" } ],
+  quiz:[ …preguntas… ] }
+```
+> Formato antiguo (`html:"…"` sin `secciones`) sigue soportado por el motor.
+> **Semana del plan:** `{ cap:2, subs:["2.2","2.3"], t:"…", d:"…" }` — el enlace
+> principal lleva a `subs[0]` y se pinta una pastilla por sección.
 
 **meta.json (por certificación):**
 ```json
@@ -259,8 +275,240 @@ prototipo monolítico de CTAL-TAE en [ctal-tae-v2-estudio.html](ctal-tae-v2-estu
       baja en código; validación de esquemas vs prueba de contrato; contrato consumidor vs
       proveedor; espera rígida/sondeo/eventos; pruebas en despliegue vs canalización aparte;
       data-driven vs keyword-driven. Verificado con jsdom.
-- [ ] **Etiquetado por objetivo de aprendizaje (TAE-x.x.x) y nivel K** del contenido,
-      para visualizar cobertura y huecos.
+- [x] **Etiquetado por objetivo de aprendizaje y nivel K** del contenido: hecho en la
+      Fase 7 (cada sección declara sus LO `TAE-x.x.x` / `FL-x.x.x` con su nivel K y se
+      pintan en la cabecera de la sección). Queda pendiente una vista agregada de
+      cobertura y huecos.
+
+### Fase 7 — Capítulos por secciones del syllabus y navegación profunda ✅
+> Problema detectado (2026-09-21): el plan de estudio tenía semanas del tipo
+> «Capítulo 2 (I)» y «Capítulo 2 (II)» que **enlazaban las dos al mismo punto**
+> (la cabecera del capítulo), en ambas certificaciones. Los capítulos eran un
+> único bloque de HTML sin puntos de entrada intermedios.
+
+- [x] **Modelo de datos:** cada capítulo admite ahora `resumen` + `secciones:[{id,titulo,lo,html}]`,
+      numeradas como en el syllabus oficial. El motor (`seccionesDe`, `anclaSec`, `buscaSec`,
+      `irASeccion`, `irACapitulo(n,secId)`) es genérico y mantiene compatibilidad con el
+      formato antiguo (`html`), que se sigue renderizando como una tarjeta única.
+- [x] **Foundation:** 6 capítulos → **22 secciones** (1.1–6.2) con sus 64 objetivos de
+      aprendizaje `FL-x.x.x` y nivel K. Teoría ampliada de 40,5 k a 47,5 k caracteres con
+      seis bloques nuevos que cubrían huecos del syllabus: contribuciones de la prueba al
+      éxito (1.2.1), el proceso de prueba en contexto (1.4.2), roles en la prueba (1.4.5),
+      desplazamiento a la izquierda (2.1.5), prueba de mantenimiento completa con los tres
+      desencadenantes y el análisis de impacto (2.3), y factores de éxito de las revisiones
+      (3.2.5, que solo existía como nota al pie). Se eliminaron tres bloques que duplicaban
+      contenido ya desarrollado en otras secciones.
+- [x] **CTAL-TAE:** 8 capítulos → **26 secciones** (1.1–8.1.4) con sus 29 objetivos
+      `TAE-x.x.x` y nivel K. Teoría ampliada con tres bloques en las secciones más escuetas:
+      consideraciones de diseño de la SAP (3.1.2), qué conocer antes de automatizar una IPA
+      (5.1.3) y cómo reestructurar el producto de prueba paso a paso (8.1.3). Ninguna nota
+      quedó huérfana: las que cerraban capítulo se reubicaron en la sección a la que aludían.
+- [x] **Navegación:** (a) las tarjetas de la rejilla listan sus secciones y cada una abre el
+      capítulo en ese punto; (b) cada capítulo abre con un índice «En este capítulo» y cada
+      sección lleva ancla propia, cabecera numerada, sus LO y un «↑ Volver al índice»;
+      (c) cada semana del plan declara `subs:[...]` y muestra una pastilla por sección, con
+      el enlace principal apuntando a la primera —«Capítulo 2 (I)» va a 2.1 y «Capítulo 2 (II)»
+      a 2.2—; (d) los bloques del caso de estudio de CTAL enlazan con su sección concreta.
+      El desplazamiento descuenta el alto real de la barra sticky y resalta la sección destino.
+- [x] Verificado con jsdom y con Chromium (claro/oscuro, 1100 px y 390 px): 22+26 destinos
+      distintos desde los índices, **ninguna semana comparte destino**, LO pintados, quiz,
+      examen, ejercicios, caso, glosario y recursos intactos y sin errores de consola.
+
+### Fase 8 — Estudio dirigido por debilidades
+> Objetivo: pasar de «leer el temario y hacer tests» a «estudiar lo que fallas».
+> Hoy el progreso guardado es `{capsOk, quizNotas[cap], semanas, examen, examenes[id]}`:
+> solo la **última nota** de cada quiz. No se guarda *qué* preguntas se fallaron, así
+> que no hay forma de repasarlas ni de detectar huecos por objetivo de aprendizaje.
+
+- [x] **8.1 · Preguntas ancladas a su sección** (2026-09-21). Las **280 preguntas** (110 de
+      Foundation + 170 de CTAL-TAE) llevan ahora `id` estable y `sec` además de `cap`:
+      - `id`: `q<cap>-<n>` para los quizzes y `s<set>-<nn>` para los sets de examen.
+      - `sec`: sección del syllabus, clasificada una a una a partir del enunciado y de la
+        justificación. Cubre las 22 secciones de Foundation y 25 de las 26 de CTAL-TAE
+        (8.1.4 solo aparece en el quiz del cap. 8, no en los sets de examen).
+      - Uso en la interfaz: **desglose por sección** en el resultado del examen (verde /
+        ámbar / rojo, cada fila abre el temario en ese punto); botón **«Repasar 4.2 ·
+        título →»** en cada pregunta de la revisión; etiqueta de sección en las preguntas
+        del quiz y atajo de repaso en la explicación **solo al fallar**; y el antiguo
+        «Examen por capítulo» pasa a **«Examen por capítulo o sección»**, con una pastilla
+        por sección con su número de preguntas y la última nota.
+      - Durante el examen **no** se muestra la sección (solo el capítulo, como antes) para
+        no dar más pista de la que da el examen real.
+      - Verificado con jsdom: 110 + 170 ids únicos con sección válida, 22 y 25 botones de
+        examen por sección, y todos los atajos de repaso (desglose y revisión) navegan a su
+        sección exacta.
+- [x] **8.2 · Registro de respuestas y repaso de falladas** (2026-09-21).
+      - **Historial por pregunta** en `estado.preguntas[id] = {ok, mal, ult, ultOk}`, que
+        alimentan tanto los quizzes como la corrección del examen (una pregunta sin
+        responder cuenta como fallo). Se exporta e importa con el resto del progreso y se
+        borra al reiniciar.
+      - **Banco unificado** `BANCO` (quizzes + todos los sets) indexado por `id`, para
+        reconstruir cualquier pregunta guardada y saber de dónde viene.
+      - **Clasificación**: `pendiente` (fallada la última vez) · `frágil` (acertada, pero
+        con fallos previos y ≥ 7 días sin tocarla) · `en repaso` (acertada hace poco, con
+        fallos previos) · `dominada` (acertada sin haber fallado nunca) · `sin practicar`.
+        La cola = pendientes + frágiles, ordenada por `1000·pendiente + 10·fallos + días`.
+      - **Pestaña «Repaso»** con contador en la propia pestaña y aviso en la cabecera:
+        tarjetas de estado, «Repasar las N» / «Repaso rápido (10)», y un desglose de
+        «dónde se concentran tus fallos» por sección, con atajo al temario y botón
+        «Repasar estas N» por sección. La sesión no tiene temporizador —aquí se estudia,
+        no se examina— y da corrección inmediata con atajo a la sección al fallar.
+      - Refactor: `pintaPreguntaInteractiva()` unifica el render de pregunta con
+        corrección inmediata que usan el quiz de capítulo y la sesión de repaso.
+      - Verificado con jsdom (`e2e-repaso.js`, 20 comprobaciones) recorriendo el ciclo
+        completo: fallar un quiz → cola y contadores → recarga → sesión de repaso →
+        reclasificación → reaparición de las frágiles a los 9 días → desglose por sección →
+        examen → reinicio. Y con Chromium en claro/oscuro a 1100 y 390 px, sin errores.
+- [x] **8.3 · Mapa de dominio por objetivo de aprendizaje** (2026-09-21).
+      > Corrección de un dato anotado antes por error: los objetivos son **64 en
+      > Foundation** (14+10+8+14+16+2 por capítulo) y **29 en CTAL-TAE** (3+4+5+3+3+3+4+4),
+      > no 44 y 26 como decían las entradas de 8.1. Ya está corregido más arriba.
+      - **Segunda vista dentro de «Repaso»**, con un selector «Cola de repaso (N)» /
+        «Mapa de dominio · N objetivos», para no añadir una octava pestaña y volver a
+        romper la barra de navegación.
+      - **Medición por sección, heredada a sus objetivos**: el banco está etiquetado por
+        sección (8.1), así que todos los LO de una sección comparten su medición, y así se
+        explica en la propia tarjeta. Métrica: «preguntas al día» = aquellas cuyo último
+        intento fue acierto, sobre el total de la sección. Verde ≥ 80 %, ámbar ≥ 50 %,
+        rojo por debajo, gris si no se ha practicado ninguna.
+      - Por capítulo y sección: barra de progreso, «X/Y preguntas al día · Z % · N en
+        cola», una **pastilla por objetivo** con su nivel K y el enunciado en el `title`
+        (todas llevan al punto del temario), y un botón **«Practicar (N)» / «Empezar (N)»**
+        que abre una sesión sin cronómetro con *todas* las preguntas de esa sección.
+      - Resumen arriba: objetivos dominados / a medias / flojos / sin practicar, y
+        «practicados X/N».
+      - La sesión de repaso se generalizó para admitir preguntas nunca vistas, con sellos
+        PENDIENTE · FRÁGIL · SIN PRACTICAR · REPASO · AL DÍA.
+      - Verificado con jsdom (`e2e-mapa.js`, 17 comprobaciones por certificación): recuento
+        de objetivos y secciones, umbrales de color con historiales sintéticos (100 %, 60 %,
+        0 %), los **86 y 55 atajos** del mapa abriendo su sección exacta, y «Practicar»
+        trayendo todas las preguntas de la sección. Chromium sin errores de consola.
+- [x] **8.4 · Reintentar el quiz in situ e historial de intentos** (2026-09-21).
+      - **Botón «↻ Repetir quiz»** sobre las preguntas y también en el resultado: vuelve a
+        montar el quiz en blanco sin salir del capítulo ni recargar (antes había que ir a
+        la rejilla y volver a entrar).
+      - **Conmutador «barajar preguntas y respuestas»** por quiz, reutilizando el
+        `prepararPreguntas()` del examen —al que se le añadió un parámetro explícito— que
+        remapea la opción correcta al barajar.
+      - **Historial de intentos** en `estado.quizIntentos[cap] = [{f, n, t}]`, los **10 más
+        recientes**, el último primero. Se pinta como una tira de pastillas con nota y
+        fecha, coloreadas según superen el umbral del 80 %, con cabecera «N intentos ·
+        mejor X/Y». La tarjeta de la rejilla pasa de «último: 3/5» a «✓ superado · 3
+        intentos» o «2 intentos · mejor 3/5».
+      - El mensaje de suspenso deja de decir «reábrelo para reintentar» y ahora indica
+        cuántos aciertos faltan y que lo fallado ya está en la cola de repaso (8.2).
+      - Decisión: un capítulo ya superado **no deja de estarlo** por un intento posterior
+        peor; «superado» es un hito alcanzado y el historial muestra la evolución real.
+      - Verificado con jsdom (`e2e-quiz.js`, 21 comprobaciones por certificación): registro
+        del intento, umbral, repetición limpiando el resultado pero conservando el
+        historial, barajado que cambia el orden y sigue corrigiendo bien, recorte a 10
+        intentos, persistencia entre sesiones y borrado al reiniciar. Chromium en
+        claro/oscuro a 1100 y 390 px sin errores.
+
+> **Fase 8 completa.** El progreso guardado pasa de `{capsOk, quizNotas, semanas, examen,
+> examenes}` a incluir `preguntas` (historial por pregunta) y `quizIntentos` (historial por
+> capítulo). Todo se exporta, importa y reinicia con el resto del progreso.
+
+- [x] **Arreglo · «Reiniciar progreso» quedaba descolgado en la barra** (2026-09-21).
+      El `.wrap` limita la barra a 960 px y los botones sumaban 950 px en Foundation y
+      1086 px en CTAL-TAE (que tiene la pestaña extra «Caso de estudio»); con
+      `margin-left:auto`, al desbordar el botón caía solo a una segunda fila. Se ha
+      **sacado de la navegación** a la tarjeta «Tu progreso» del plan de estudio, junto a
+      exportar e importar, que es su sitio natural (gestión del progreso, no navegación) y
+      además lo aleja de las pestañas por ser destructivo. De paso se acortaron las
+      etiquetas («Plan de estudio» → «Plan», «Temario y quizzes» → «Temario», «Recursos y
+      consejos» → «Recursos»), de modo que la barra cabe en **una sola fila hasta 900 px**
+      en ambas certificaciones incluso con la pestaña nueva «Repaso» de la fase 8.2.
+
+### Fase 9 — Modos de práctica ✅
+- [x] **9.1 · Examen adaptativo** (2026-09-21). Tarjeta propia en el selector de examen:
+      mismo formato que el real (40 preguntas, mismo tiempo y corte) pero **sin** la
+      distribución oficial por capítulo.
+      - Peso por pregunta según el historial de 8.2: pendiente 100, frágil 60, sin
+        practicar 40, en repaso 15, dominada 5, más un extra por número de fallos y por
+        días sin tocarla.
+      - **Muestreo ponderado sin reemplazo**, no «las N peores»: favorece lo flojo pero
+        dos adaptativos seguidos no son idénticos y siempre entra material de repaso.
+      - Antes de empezar, la tarjeta anuncia qué priorizaría (secciones con más fallos);
+        y el resultado explica la composición real, para que no sea una caja negra.
+      - El resultado se guarda como `examenes['adaptativo']`, sin pisar el de los sets.
+- [x] **9.2 · Marcar preguntas durante el examen** (2026-09-21). Botón «⚑ Marcar para
+      revisar» en la cabecera de cada pregunta, con `aria-pressed`; esquina ámbar en el
+      mapa numérico; **leyenda** bajo el mapa con respondidas / sin responder / marcadas;
+      botón **«⚑ Siguiente pendiente»** que salta a la próxima marcada o sin responder; el
+      aviso al corregir ahora junta ambas cosas («tienes N sin responder y M marcadas»); y
+      en la revisión, las marcadas salen señaladas con ⚑ y el resultado resume cuántas
+      marcaste y cuántas acertaste.
+- [x] **9.3 · Flashcards del glosario** (2026-09-21). Segunda vista dentro de «Glosario»
+      («Lista buscable» / «Flashcards»), sin tocar la barra de navegación.
+      - **Tres sentidos** de tarjeta: español → inglés, inglés → español y definición →
+        término. La respuesta empieza oculta: primero se intenta recordar, luego se voltea
+        y solo entonces aparece «✓ Me la sé» / «✗ No me la sé».
+      - Historial en `estado.glosario[término]` con la **misma clasificación que el repaso**
+        (se extrajo `clasificaRegistro()` para que preguntas y términos la compartan):
+        pendiente · frágil · en repaso · dominada · sin ver, con sus recuentos.
+      - Dos barajas: todas, o solo las que fallas. Al terminar, resumen de aciertos.
+- [x] Suite ampliada con `examen.test.js` (20 comprobaciones, incluida la **estadística**
+      de que la sección floja sale sobrerrepresentada en 10 generaciones seguidas) y
+      `glosario.test.js` (25). **Total: 317 comprobaciones en 14 suites.** Además se
+      silenciaron los avisos «Not implemented» de jsdom (navegación y descarga) sin tapar
+      los errores reales.
+
+### Fase 10 — Navegación y uso
+- [ ] **10.1 · Enrutado por URL.** `#temario/4/4.2`, `#simulacro`, etc.: enlaces que se
+      pueden guardar y compartir, botón atrás del navegador funcional y recarga que
+      mantiene el punto. Hoy no hay ningún uso de `location.hash` ni de `history`.
+- [ ] **10.2 · Búsqueda global en el temario.** Como la del glosario pero sobre las 48
+      secciones, con resaltado y enlace al punto exacto.
+- [ ] **10.3 · Continuar donde lo dejaste.** Recordar la última sección vista y ofrecerla
+      en la cabecera al volver.
+- [ ] **10.4 · Glosario enlazado desde el temario.** Marcar los términos del glosario en el
+      texto de los capítulos con su definición al pasar el ratón o al pulsar.
+
+### Fase 11 — Plataforma
+- [ ] **11.1 · PWA.** `manifest.webmanifest` + service worker con precacheo de los datos:
+      instalable en el móvil y offline real. Encaja con la decisión de «sin backend»; hay que
+      mantener el funcionamiento por `file://` (el SW solo actúa bajo `http(s)`).
+- [ ] **11.2 · Estadísticas de progreso.** Histórico de notas con fecha, tiempo por pregunta
+      en los exámenes y gráfica de evolución (SVG en línea, sin librerías).
+
+### Fase 12 — Calidad
+- [x] **12.1 · Suite de validación en el repo** (2026-09-21, *adelantada*: las
+      comprobaciones de las fases 7 y 8 se escribían al vuelo y se perdían).
+      - `npm test` → `test/ejecutar.js`. **227 comprobaciones en 10 suites, ~5 s.** Única
+        dependencia: jsdom, y solo de desarrollo (`devDependencies`); la web sigue sin
+        build ni dependencias. `node_modules/` va a `.gitignore`.
+      - Filtros: `node test/ejecutar.js datos mapa`, `--cert=foundation`, y
+        `TEST_DETALLE=0` para ver solo lo que falla.
+      - Módulos: **datos** (integridad de `datos.js`, sin DOM), **navegacion**,
+        **repaso**, **mapa** y **quiz** (recorridos completos en jsdom). `test/ayuda.js`
+        centraliza el arranque de la app y el mini-arnés de aserciones.
+      - `datos.test.js` comprueba: numeración de capítulos y secciones; que el número de
+        sección concuerde con su capítulo; objetivos de aprendizaje con id único, formato
+        `FL-/TAE-x.x.x`, nivel K1–K4, enunciado y pertenencia a su sección; preguntas con
+        id único, `c` dentro del rango de `op`, ≥3 opciones sin repetir, enunciado y
+        justificación, nivel k1–k4 y `sec` existente en su capítulo; **distribución oficial
+        por capítulo de cada set** (declarada ahora en `META.examen.distribucion`); HTML del
+        temario con etiquetas balanceadas; `rel="noopener"` en los enlaces externos; y que
+        el plan de estudio enlace a secciones reales, **sin dos semanas al mismo destino**
+        y cubriendo las 22/26 secciones. También ejercicios, caso de estudio y glosario.
+      - **Verificado por mutación**: se rompieron a propósito 11 cosas (respuesta correcta
+        fuera de rango, `sec` inexistente, id duplicado, distribución alterada, HTML sin
+        cerrar, dos semanas al mismo destino, nivel K inválido, el índice del capítulo sin
+        navegar, el quiz sin registrar historial, repetir sin limpiar el resultado y el
+        mapa sin colorear) y **la suite detectó las 11**.
+- [ ] **12.2 · Accesibilidad.** `role="tab"`/`aria-selected` en la navegación, mover el foco
+      al cambiar de sección, `aria-live` en el resultado del quiz y del examen, enlace para
+      saltar al contenido y repaso de contraste en ambos temas.
+
+### Fase 13 — Contenido
+- [ ] **13.1 · Caso de estudio para Foundation.** Equivalente a «Aurora» de CTAL-TAE,
+      hilado por los 6 capítulos y enlazado a sus secciones.
+- [ ] **13.2 · Sample Exams C y D en español.** Traducir y añadir como sets adicionales
+      (decisión pendiente desde la Fase 3; mantener el criterio de no reproducir material
+      con copyright de forma verbatim).
+- [ ] **13.3 · Más ejercicios K3 en Foundation.** Hoy son 8 y se concentran en el cap. 4;
+      ampliar a los capítulos 1, 2, 3 y 6.
 
 ## 6. Decisiones tomadas
 
@@ -271,5 +519,8 @@ prototipo monolítico de CTAL-TAE en [ctal-tae-v2-estudio.html](ctal-tae-v2-estu
 ## 7. Cómo retomar
 
 1. Lee este `PLAN.md` y marca dónde te quedaste en la sección 5.
-2. El contenido de origen está en [docs/md/](docs/md/).
-3. El prototipo de referencia es [ctal-tae-v2-estudio.html](ctal-tae-v2-estudio.html).
+2. Ejecuta `npm install && npm test` para comprobar que todo sigue en pie
+   (317 comprobaciones, ~6 s). La web en sí no necesita nada: se abre con
+   `file://` o con cualquier servidor estático.
+3. El contenido de origen está en [docs/md/](docs/md/).
+4. El prototipo de referencia es [ctal-tae-v2-estudio.html](ctal-tae-v2-estudio.html).

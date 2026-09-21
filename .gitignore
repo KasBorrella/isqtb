@@ -1,0 +1,9 @@
+# Dependencias de la suite de test (la web no necesita ninguna)
+node_modules/
+package-lock.json
+
+# Basura de sistema y editores
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
